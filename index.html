@@ -109,7 +109,49 @@ html,body{margin:0;background:#0b1026;color:#e8ecf8;font-family:'Nunito',system-
 #dg .fade.on{opacity:1}
 #dg .restart{font-size:12px}
 
+/* ===== Mission briefing ===== */
+#dg .brief{justify-content:flex-start;overflow:auto;background:rgba(6,10,36,.82);padding:22px 18px 26px;gap:0}
+#dg .brief .skip{position:absolute;right:12px;top:10px;font-family:'Press Start 2P',monospace;font-size:9px;color:#9fb3ee;background:none;border:2px solid #2d3a85;border-radius:6px;padding:7px 9px}
+#dg .brief .skip:hover{color:#fff;border-color:#6b82d6}
+#dg .pre{opacity:0;transform:translateY(8px)}
+#dg .pre.in{opacity:1;transform:none;transition:opacity .7s,transform .7s}
+#dg .b-flags{display:flex;align-items:center;gap:14px;justify-content:center;margin:10px 0 14px}
+#dg .b-title{font-family:'Press Start 2P',monospace;font-size:clamp(11px,2.4vw,18px);margin:0;line-height:1.5;text-shadow:3px 3px 0 #0d1230}
+#dg .flag{position:relative;flex:none;width:46px;height:31px;border:3px solid #0d1230;box-shadow:0 3px 0 rgba(0,0,0,.4)}
+#dg .flag.in{background:linear-gradient(#ff9933 0 33.3%,#fff 33.3% 66.6%,#138808 66.6%)}
+#dg .flag.in::after{content:"";position:absolute;left:50%;top:50%;width:7px;height:7px;margin:-4px 0 0 -4px;background:#1a3a9a}
+#dg .flag.fr{background:linear-gradient(90deg,#0055a4 0 33.3%,#fff 33.3% 66.6%,#ef4135 66.6%)}
+#dg .b-head{font-family:'Press Start 2P',monospace;font-size:clamp(14px,3.2vw,24px);color:#ffd98a;margin:0 0 18px;letter-spacing:2px;text-shadow:3px 3px 0 #0d1230}
+#dg .b-p{max-width:660px;margin:0 0 12px;font-size:clamp(15px,2vw,19px);font-weight:700;line-height:1.5;text-shadow:1px 1px 0 #000}
+#dg .b-p .off{opacity:0}
+#dg .b-p.b-end{color:#ffe9c0;font-weight:800}
+#dg .b-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;width:min(820px,100%);margin:8px 0 14px}
+#dg .b-card{display:flex;align-items:center;gap:10px;text-align:left;background:linear-gradient(#18225a,#111a46);border:3px solid #3a4a8f;border-radius:10px;padding:10px 12px;box-shadow:0 4px 0 rgba(0,0,0,.4)}
+#dg .b-card canvas{width:52px;height:auto;flex:none;image-rendering:pixelated;background:#0b1236;border:2px solid #2d3a85;border-radius:6px}
+#dg .b-card .n{font-family:'Press Start 2P',monospace;font-size:9px;line-height:1.6;color:#ffd98a;margin-bottom:5px}
+#dg .b-card .s{font-weight:800;font-size:14px;line-height:1.3}
+#dg .b-start{margin-top:8px}
+
+/* ===== Secret choices + Diplomatic Disaster ===== */
+#dg .choice.secret{border-style:dashed}
+#dg .stat.hit{animation:hit .7s;border-color:#ff5a5a;box-shadow:0 0 14px rgba(255,80,80,.75)}
+@keyframes hit{0%,100%{transform:none}15%{transform:translateX(-6px)}30%{transform:translateX(6px)}45%{transform:translateX(-4px)}60%{transform:translateX(3px)}}
+#dg .stage.shake{animation:shake .6s}
+@keyframes shake{0%,100%{transform:none}20%{transform:translate(-4px,2px)}40%{transform:translate(4px,-2px)}60%{transform:translate(-3px,-1px)}80%{transform:translate(2px,2px)}}
+#dg .pop{position:absolute;left:50%;top:12%;font-size:56px;animation:popup .9s forwards;pointer-events:none}
+@keyframes popup{0%{transform:translate(-50%,0) scale(.3);opacity:0}30%{transform:translate(-50%,-10px) scale(1.2);opacity:1}100%{transform:translate(-50%,-40px) scale(1);opacity:0}}
+#dg .res.disaster{background:linear-gradient(180deg,rgba(14,6,34,.9) 0,rgba(14,6,34,.62) 52%,rgba(14,6,34,0) 82%)}
+#dg .badge{font-family:'Press Start 2P',monospace;font-size:10px;color:#1d2340;background:linear-gradient(#ffe27a,#f3c34a);border:3px solid #0d1230;border-radius:20px;padding:8px 14px;margin-bottom:14px;animation:wob 1.6s ease-in-out infinite}
+#dg .res.disaster .end-title{color:#ff9bd0;animation:wob 1.8s ease-in-out infinite;text-shadow:3px 3px 0 #000,0 0 18px rgba(255,120,200,.5)}
+@keyframes wob{0%,100%{transform:rotate(-1.5deg)}50%{transform:rotate(1.5deg)}}
+#dg .res .btns{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;align-items:center}
+#dg .btn.big{font-size:15px;padding:18px 26px}
+#dg .rain{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:-1}
+#dg .rain span{position:absolute;top:-40px;font-size:26px;animation:fall linear infinite}
+@keyframes fall{to{transform:translateY(720px) rotate(360deg)}}
+
 @media (max-width:760px){
+  #dg .b-cards{grid-template-columns:1fr}
   #dg .hud{grid-template-columns:repeat(2,1fr);gap:8px}
   #dg .play{flex-direction:column;align-items:stretch;gap:14px;padding:14px;min-height:0}
   #dg .stage{min-height:640px}
@@ -163,6 +205,24 @@ html,body{margin:0;background:#0b1026;color:#e8ecf8;font-family:'Nunito',system-
       </div>
     </div>
 
+    <!-- Mission briefing -->
+    <div class="screen brief hidden" id="dgBrief">
+      <button class="skip" id="dgBriefSkip" type="button">Skip ▸</button>
+      <div class="b-flags pre" id="bFlags"><span class="flag in"></span><h3 class="b-title">DIPLOMAT — INDIA × FRANCE</h3><span class="flag fr"></span></div>
+      <div class="b-head pre" id="bHead">MISSION BRIEFING</div>
+      <p class="b-p" id="bP1"></p>
+      <p class="b-p" id="bP2"></p>
+      <p class="b-p" id="bP3"></p>
+      <div class="b-cards">
+        <div class="b-card pre" data-char="ambassador"><canvas width="48" height="56"></canvas><div><div class="n">01 — FRENCH AMBASSADOR</div><div class="s">Diplomacy &amp; Strategic Relations</div></div></div>
+        <div class="b-card pre" data-char="scientist"><canvas width="48" height="56"></canvas><div><div class="n">02 — FRENCH SPACE SCIENTIST</div><div class="s">Science, Technology &amp; Space</div></div></div>
+        <div class="b-card pre" data-char="culture"><canvas width="48" height="56"></canvas><div><div class="n">03 — FRENCH CULTURAL REPRESENTATIVE</div><div class="s">Culture, Education &amp; People</div></div></div>
+      </div>
+      <p class="b-p b-end" id="bE1"></p>
+      <p class="b-p b-end" id="bE2"></p>
+      <button class="btn primary b-start pre" id="dgStartMission" type="button">▶ START MISSION</button>
+    </div>
+
     <!-- Play -->
     <div class="play hidden" id="dgPlay">
       <div class="char"><canvas id="dgSprite" width="48" height="56"></canvas><div class="plate" id="dgPlate"></div></div>
@@ -178,10 +238,16 @@ html,body{margin:0;background:#0b1026;color:#e8ecf8;font-family:'Nunito',system-
 
     <!-- Results -->
     <div class="screen res hidden" id="dgRes">
+      <div class="rain" id="dgRain"></div>
+      <div class="badge hidden" id="dgBadge">★ SECRET ENDING UNLOCKED ★</div>
       <h3 class="end-title" id="dgEndTitle"></h3>
       <p class="end-text" id="dgEndText"></p>
+      <p class="end-text hidden" id="dgEndText2"></p>
       <div class="profile" id="dgProfile"></div>
-      <button class="btn gold" id="dgAgain">↻ Play Again</button>
+      <div class="btns">
+        <button class="btn gold" id="dgAgain">↻ Play Again</button>
+        <button class="btn hidden" id="dgReturn" type="button">RETURN TO WEBSITE</button>
+      </div>
     </div>
 
     <!-- How to play -->
@@ -233,7 +299,8 @@ const DiplomatLogic = (function () {
           choices: [
             { id: 'A1', text: 'The trust we have built over the years.', delta: d(4, 3, 1, 2), reaction: 'That trust has helped our countries work together through changing times.' },
             { id: 'A2', text: 'Our shared economic and strategic interests.', delta: d(-1, 1, 3, 2), reaction: 'Those interests matter, although our relationship reaches far beyond practical gains.' },
-            { id: 'A3', text: 'Our governments usually want the same things.', delta: d(0, -2, -1, 1), reaction: 'Shared goals help, but they do not guarantee a strong partnership.' }
+            { id: 'A3', text: 'Our governments usually want the same things.', delta: d(0, -2, -1, 1), reaction: 'Shared goals help, but they do not guarantee a strong partnership.' },
+            { id: 'H1', secret: true, emoji: '🍕', text: 'Maybe we should solve every diplomatic issue over pizza and croissants.', delta: d(-15, -15, -10, -15), reaction: 'Pizza and croissants? A tempting menu, but treaties are rarely signed with crumbs on the table.' }
           ] },
         { line: 'Interesting. A partnership must keep moving forward. Where should we deepen our cooperation?',
           choices: [
@@ -251,7 +318,8 @@ const DiplomatLogic = (function () {
           choices: [
             { id: 'S1', text: 'Joint missions and scientific research.', delta: d(2, 2, 3, 4), reaction: 'That is promising. Joint missions can help us achieve more together.' },
             { id: 'S2', text: 'Earth observation and climate research.', delta: d(2, 3, 4, 3), reaction: 'Precisely. Earth observation can help us understand environmental challenges.' },
-            { id: 'S3', text: 'Developing our technologies separately.', delta: d(-2, 0, 2, -3), reaction: 'Independent research has value, but we should not overlook the benefits of collaboration.' }
+            { id: 'S3', text: 'Developing our technologies separately.', delta: d(-2, 0, 2, -3), reaction: 'Independent research has value, but we should not overlook the benefits of collaboration.' },
+            { id: 'H2', secret: true, emoji: '🚀', text: 'What if we launch a satellite shaped like a giant baguette?', delta: d(-15, -10, -15, -15), reaction: 'A baguette-shaped satellite? The drag coefficient alone would be... remarkable. Let us move on.' }
           ] },
         { line: 'Scientific progress requires more than ambition. What makes international cooperation so valuable?',
           choices: [
@@ -269,7 +337,8 @@ const DiplomatLogic = (function () {
           choices: [
             { id: 'C1', text: 'Expand student exchange programmes.', delta: d(3, 2, 2, 4), reaction: 'Student exchanges can create friendships and lifelong connections.' },
             { id: 'C2', text: 'Organise cultural festivals and exchange programmes.', delta: d(4, 3, 2, 4), reaction: 'Wonderful. Culture gives people a chance to understand one another.' },
-            { id: 'C3', text: 'Focus on formal diplomacy instead.', delta: d(-1, -1, -1, -2), reaction: 'Formal diplomacy matters, but it cannot replace connections between ordinary people.' }
+            { id: 'C3', text: 'Focus on formal diplomacy instead.', delta: d(-1, -1, -1, -2), reaction: 'Formal diplomacy matters, but it cannot replace connections between ordinary people.' },
+            { id: 'H3', secret: true, emoji: '🥖', text: 'We could settle cultural differences with a baguette-eating competition.', delta: d(-15, -15, -10, -15), reaction: 'A baguette-eating competition? I fear that would only settle who is hungrier.' }
           ] },
         { line: 'And what do you think young people gain from these cultural exchanges?',
           choices: [
@@ -288,7 +357,8 @@ const DiplomatLogic = (function () {
             { id: 'F1', text: 'Defence and security.', delta: d(1, 2, 3, 1), reaction: 'Security is an important foundation for our strategic partnership.' },
             { id: 'F2', text: 'Space, science and technology.', delta: d(1, 2, 4, 3), reaction: 'Innovation can open up an exciting future for both countries.' },
             { id: 'F3', text: 'Culture, education and people-to-people ties.', delta: d(3, 3, 2, 3), reaction: 'People must remain at the centre of international relationships.' },
-            { id: 'F4', text: 'A balanced partnership across all these areas.', delta: d(3, 4, 2, 4), reaction: 'A comprehensive partnership gives us the opportunity to grow together.' }
+            { id: 'F4', text: 'A balanced partnership across all these areas.', delta: d(3, 4, 2, 4), reaction: 'A comprehensive partnership gives us the opportunity to grow together.' },
+            { id: 'H4', secret: true, emoji: '🎬', text: 'Forget diplomacy. Let\'s make an India–France Bollywood musical.', delta: d(-20, -20, -15, -20), reaction: 'A musical? An imaginative suggestion. But this address will have to remain... less choreographed.' }
           ] },
         { line: 'One final question. What should define the future of India–France relations?',
           choices: [
@@ -304,7 +374,8 @@ const DiplomatLogic = (function () {
     1: { title: 'SUMMIT SUCCESSFUL', text: 'Your balanced diplomatic approach has strengthened the India–France partnership. Trust, communication and cooperation have opened the door to a stronger future.' },
     2: { title: 'STRATEGIC PARTNERSHIP', text: 'Your understanding of international cooperation has created opportunities for technological and strategic progress. The partnership has a promising future.' },
     3: { title: 'PROMISING PARTNERSHIP', text: 'Your discussions have kept the partnership moving forward. However, some opportunities for stronger cooperation remain unexplored.' },
-    4: { title: 'DIPLOMATIC SETBACK', text: 'Your decisions have created challenges during the summit. Both countries will need further dialogue and understanding to strengthen their relationship.' }
+    4: { title: 'DIPLOMATIC SETBACK', text: 'Your decisions have created challenges during the summit. Both countries will need further dialogue and understanding to strengthen their relationship.' },
+    diplomatic_disaster: { title: 'DIPLOMATIC DISASTER', text: 'Your diplomatic career has taken a... creative turn.', text2: 'India–France relations may need a little time to recover.' }
   };
 
   function clamp(value) { return Math.min(100, Math.max(0, value)); }
@@ -327,8 +398,9 @@ const DiplomatLogic = (function () {
     );
   }
 
-  // Evaluated strictly in order; first match wins.
+  // Evaluated strictly in order; first match wins. The secret ending is checked first.
   function determineEnding(a, P) {
+    if (a.trust <= 15 && a.diplomacy <= 15 && a.knowledge <= 15 && a.cooperation <= 15) return 'diplomatic_disaster';
     if (P >= 68 && a.trust >= 65 && a.diplomacy >= 65 && a.cooperation >= 65) return 1;
     if (P >= 60 && a.knowledge >= 65 && a.cooperation >= 65) return 2;
     if (P >= 50) return 3;
@@ -478,10 +550,55 @@ const DiplomatLogic = (function () {
       for (let i = 0; i < 8; i++) R(c, 30 + i * 7, 20, 4, 1, '#b9c6f0');
       for (let i = 0; i < 6; i++) R(c, 34 + i * 7, 28, 4, 1, '#b9c6f0');
       indiaFlag(c, 6, 8, 12, 24); franceFlag(c, 176, 8, 12, 24, 0.5);
-      franceFlag(c, 100, 8, 12, 24, 2); indiaFlag(c, 92, 8, 0, 0);
+      franceFlag(c, 100, 8, 12, 24, 2);
       R(c, 0, 70, BW, 38, '#10183d');
       const r = rng(9); for (let row = 0; row < 3; row++) for (let x = -4 + row * 5; x < BW; x += 14) { const y = 78 + row * 10; const col = row === 0 ? '#0a1030' : row === 1 ? '#070b24' : '#040618'; R(c, x + 2, y, 8, 3, col); R(c, x, y + 3, 12, 10, col); if (r() > .8) R(c, x + 3, y, 6, 2, '#2a2230'); }
     }
+  };
+  /* Secret-ending scene: a summit that has comically fallen apart */
+  function pizza(c, x, y) { for (let r = 0; r < 7; r++) { const w = 9 - r * 1.3; R(c, x + (9 - w) / 2, y + r, w, 1, r === 0 ? '#d99a3a' : '#ffd65a'); } R(c, x + 3, y + 2, 2, 2, '#d7373f'); R(c, x + 4, y + 5, 2, 1, '#d7373f'); }
+  function baguette(c, x, y, len, tilt) { for (let i = 0; i < len; i++) { const yy = y + Math.round(i * tilt); R(c, x + i, yy, 1, 3, '#d99a3a'); R(c, x + i, yy, 1, 1, '#f0c070'); if (i % 5 === 2) R(c, x + i, yy + 1, 1, 1, '#b57a28'); } }
+  function confused(c, x, y, suit, skin, hair) {
+    R(c, x, y + 8, 10, 12, suit); R(c, x - 2, y + 9, 2, 6, suit); R(c, x + 10, y + 4, 2, 8, suit);
+    R(c, x + 1, y, 8, 8, skin); R(c, x + 1, y, 8, 3, hair); R(c, x + 3, y + 4, 1, 2, '#111'); R(c, x + 6, y + 4, 1, 2, '#111'); R(c, x + 4, y + 6, 2, 1, '#7a2b2b');
+    [[1, 0], [2, 0], [3, 1], [2, 2], [2, 3], [2, 5]].forEach(([qx, qy]) => R(c, x + 3 + qx, y - 9 + qy, 1, 1, '#ffe27a'));
+  }
+  BG.disaster = function (c) {
+    vgrad(c, 0, BH, [[0, '#2a1a4a'], [0.55, '#5a2f6e'], [1, '#8a4a6a']]);
+    for (let x = 0; x < BW; x += 10) R(c, x, 0, 5, 64, 'rgba(120,20,40,.35)');
+    // crooked banner
+    for (let i = 0; i < 60; i++) { const o = Math.round(i * 0.25); R(c, 24 + i, 8 + o, 1, 14, '#e8e1c8'); R(c, 24 + i, 10 + o, 1, 10, '#1f3a8f'); }
+    R(c, 24, 8, 1, 30, '#e8e1c8'); R(c, 60, 14, 1, 1, '#b9c6f0');
+    // leaning flags
+    for (let i = 0; i < 50; i++) { R(c, 8 + Math.round(i * 0.3), 8 + i, 1, 1, '#c9b99a'); R(c, 184 - Math.round(i * 0.3), 8 + i, 1, 1, '#c9b99a'); }
+    for (let r = 0; r < 15; r++) { const col = r < 5 ? '#ff9933' : r < 10 ? '#fff' : '#138808'; R(c, 9 + Math.round(r * 0.3), 8 + r, 24, 1, col); }
+    R(c, 20, 14, 3, 3, '#1a3a9a');
+    for (let r = 0; r < 15; r++) { const o = Math.round(r * 0.3); R(c, 160 - o, 8 + r, 8, 1, '#0055a4'); R(c, 168 - o, 8 + r, 8, 1, '#fff'); R(c, 176 - o, 8 + r, 8, 1, '#ef4135'); }
+    // hanging lamp + light cone
+    R(c, 95, 0, 2, 14, '#555'); R(c, 90, 14, 12, 4, '#cfcfcf');
+    for (let r = 0; r < 62; r++) { const w = 6 + r * 0.7; R(c, 96 - w / 2, 18 + r, w, 1, 'rgba(255,240,180,0.07)'); }
+    // floor + dais
+    R(c, 0, 84, BW, 24, '#3a2a4a'); for (let x = 0; x < BW; x += 14) R(c, x, 84, 1, 24, '#4a3a5a'); R(c, 0, 84, BW, 1, '#6a5a7a');
+    R(c, 40, 80, 112, 5, '#5b3a6a');
+    // confetti
+    const r = rng(33); const cc = ['#ff7ab8', '#ffe27a', '#7de0ff', '#8dff9d', '#fff'];
+    for (let i = 0; i < 50; i++) R(c, r() * BW, r() * 90, 2, 1, cc[Math.floor(r() * cc.length)]);
+    // diplomats
+    confused(c, 28, 68, '#1b2a52', '#e8b998', '#5a4a3a');
+    confused(c, 54, 70, '#555b66', '#c58b5d', '#222');
+    confused(c, 114, 68, '#7a2b3a', '#f1c9a5', '#b9bfcb');
+    confused(c, 140, 70, '#2f6f73', '#e0ac85', '#3b2a1f'); pizza(c, 141, 59);
+    confused(c, 166, 68, '#1b2a52', '#c58b5d', '#ddd');
+    // fallen podium
+    R(c, 70, 84, 40, 13, '#6b4423'); R(c, 70, 84, 40, 2, '#8a5a2f'); R(c, 66, 86, 4, 9, '#8a5a2f'); R(c, 86, 87, 8, 8, '#d4a837'); R(c, 88, 89, 4, 4, '#6b4423');
+    R(c, 112, 93, 10, 1, '#333'); R(c, 122, 92, 3, 3, '#555');
+    // papers
+    [[40, 90], [60, 98], [100, 100], [124, 88], [146, 96], [154, 90], [30, 99], [84, 101], [14, 92], [176, 99]].forEach(([x, y]) => { R(c, x, y, 7, 4, '#f4f4f0'); R(c, x, y + 4, 7, 1, 'rgba(0,0,0,.25)'); R(c, x + 1, y + 1, 4, 1, '#aab'); });
+    [[62, 44], [132, 36], [100, 56], [76, 30]].forEach(([x, y]) => { R(c, x, y, 6, 4, '#f4f4f0'); R(c, x + 1, y + 1, 3, 1, '#aab'); });
+    // pizza + baguettes everywhere
+    pizza(c, 58, 91); pizza(c, 120, 97); pizza(c, 24, 96); pizza(c, 98, 90);
+    baguette(c, 36, 94, 24, -0.1); baguette(c, 124, 100, 26, -0.08); baguette(c, 84, 98, 18, 0); baguette(c, 150, 92, 20, 0.1);
+    baguette(c, 106, 76, 14, 0.4);
   };
   const bgCanvas = $('dgBg'), bgCtx = bgCanvas.getContext('2d');
   let curBg = '';
@@ -626,7 +743,7 @@ const DiplomatLogic = (function () {
       o.connect(g); g.connect(sfxBus); o.start(t); o.stop(t + dur + 0.05);
     }
     return {
-      S, theme, ensure, apply,
+      S, theme, ensure, apply, tone,
       tick() { const n = performance.now(); if (n - lastTick < 45) return; lastTick = n; tone(1150 + (n % 7) * 40, 0.03, 0.05, 'triangle'); },
       reveal() { tone(660, 0.18, 0.09, 'sine'); tone(990, 0.22, 0.05, 'sine', 0.06); },
       select() { tone(523, 0.12, 0.16, 'sine'); tone(784, 0.2, 0.16, 'sine', 0.08); },
@@ -695,7 +812,7 @@ const DiplomatLogic = (function () {
     typeText(nd.line, () => {
       const wrap = $('dgChoices');
       nd.choices.forEach((ch, i) => {
-        const b = document.createElement('button'); b.className = 'choice'; b.type = 'button'; b.dataset.id = ch.id; b.textContent = ch.text;
+        const b = document.createElement('button'); b.className = 'choice' + (ch.secret ? ' secret' : ''); b.type = 'button'; b.dataset.id = ch.id; b.textContent = (ch.emoji ? ch.emoji + ' ' : '') + ch.text;
         b.style.animationDelay = (i * 90) + 'ms'; b.addEventListener('click', () => onChoose(ch.id)); wrap.appendChild(b);
       });
     });
@@ -709,6 +826,7 @@ const DiplomatLogic = (function () {
     answered = true;
     state = Object.assign({}, state, L.applyChoice(state, ch.delta), { choiceHistory: state.choiceHistory.concat(id) });
     Snd.select(); renderHud(true);
+    if (ch.secret) hitAnimation();
     document.querySelectorAll('#dgChoices .choice').forEach(b => { b.disabled = true; b.classList.add(b.dataset.id === id ? 'chosen' : 'dim'); });
     expr = moodOf(ch.delta); redraw();
     typeText(ch.reaction, () => {
@@ -717,6 +835,15 @@ const DiplomatLogic = (function () {
       const btn = document.createElement('button'); btn.className = 'btn cont'; btn.type = 'button'; btn.textContent = 'Continue ▶'; btn.addEventListener('click', onContinue, { once: true });
       row.appendChild(rec); row.appendChild(btn);
     });
+  }
+
+  function hitAnimation() {
+    const stage = $('dgStage'), stats = document.querySelectorAll('#dg .stat');
+    stage.classList.remove('shake'); stats.forEach(s => s.classList.remove('hit')); void stage.offsetWidth;
+    stage.classList.add('shake'); stats.forEach(s => s.classList.add('hit'));
+    const p = document.createElement('div'); p.className = 'pop'; p.textContent = '💥'; $('dgPlay').appendChild(p);
+    Snd.tone && Snd.tone(220, 0.35, 0.18, 'sawtooth', 0, 70);
+    setTimeout(() => { stage.classList.remove('shake'); stats.forEach(s => s.classList.remove('hit')); p.remove(); }, 900);
   }
 
   function onContinue() {
@@ -740,28 +867,97 @@ const DiplomatLogic = (function () {
   function showResults() {
     state.gameFinished = true;
     const P = L.calculatePartnershipScore(state), e = L.determineEnding(state, P), E = L.ENDINGS[e];
-    show('dgPlay', false); setBg('title'); $('dgScene').textContent = 'Summit Results';
+    const secret = e === 'diplomatic_disaster';
+    show('dgPlay', false); setBg(secret ? 'disaster' : 'title'); $('dgScene').textContent = secret ? 'Secret Ending' : 'Summit Results';
     const t = $('dgEndTitle'); t.textContent = E.title; t.className = 'end-title end-' + e; $('dgEndText').textContent = E.text;
+    $('dgRes').classList.toggle('disaster', secret); show('dgBadge', secret); show('dgReturn', secret);
+    show('dgEndText2', secret); if (secret) $('dgEndText2').textContent = E.text2;
+    const rain = $('dgRain'); rain.innerHTML = '';
+    if (secret && !reduce) ['🍕', '🥖', '📄', '🥐', '🍕', '🥖', '📄', '🥐', '🥖', '📄'].forEach((em, i) => { const s = document.createElement('span'); s.textContent = em; s.style.left = (4 + i * 10) + '%'; s.style.animationDuration = (7 + (i % 4) * 2) + 's'; s.style.animationDelay = (-i * 1.3) + 's'; rain.appendChild(s); });
     const icons = { trust: '🤝', diplomacy: '💬', knowledge: '📖', cooperation: '👥' };
     $('dgProfile').innerHTML = KEYS.map(k => `<div class="pcard"><div class="ic">${icons[k]}</div><div class="nm">${k[0].toUpperCase() + k.slice(1)}</div><div class="num">${state[k]}</div></div>`).join('') +
       `<div class="pscore"><div class="nm">Partnership<br>Score</div><div class="num">${P}/100</div></div>`;
+    $('dgAgain').className = secret ? 'btn gold big' : 'btn gold';
     show('dgRes', true); Snd.theme('summit');
   }
 
   function startGame() {
-    state = L.freshState(); KEYS.forEach(k => shown[k] = 50); renderHud(false);
-    show('dgTitle', false); show('dgRes', false); show('dgTrans', false); show('dgPlay', true); $('dgTop').classList.remove('nohud');
+    state = L.freshState(); KEYS.forEach(k => shown[k] = 50); renderHud(false); briefSeen = true; briefTok++;
+    ['dgTitle', 'dgBrief', 'dgRes', 'dgTrans'].forEach(i => show(i, false)); show('dgPlay', true);
     Snd.theme(scene().music); renderNode();
   }
   function restart() {
-    state = L.freshState(); answered = false; clearInterval(typeTimer); typing = false; talking = false;
+    state = L.freshState(); answered = false; clearInterval(typeTimer); typing = false; talking = false; briefTok++;
     KEYS.forEach(k => shown[k] = 50); renderHud(false);
-    ['dgPlay', 'dgTrans', 'dgRes', 'dgHow', 'dgSet'].forEach(i => show(i, false));
+    ['dgPlay', 'dgTrans', 'dgRes', 'dgBrief', 'dgHow', 'dgSet'].forEach(i => show(i, false));
+    $('dgRes').classList.remove('disaster'); show('dgBadge', false); show('dgReturn', false); show('dgEndText2', false); $('dgRain').innerHTML = '';
+    $('dgChoices').innerHTML = ''; $('dgContRow').innerHTML = '';
     show('dgTitle', true); setBg('title'); $('dgScene').textContent = 'Introduction'; Snd.theme('title');
   }
 
+  /* ---------------- Mission briefing (opening sequence, shown once) ---------------- */
+  let briefSeen = false, briefTok = 0, briefSkip = false, skipWake = [];
+  const BRIEF = {
+    p1: 'India and France share a longstanding relationship built on diplomacy, defence, science, culture and education.',
+    p2: 'You are a young Indian diplomat preparing for an important India–France summit.',
+    p3: 'Before the summit begins, you will meet three French representatives and discuss the future of this partnership.',
+    e1: 'Your responses will shape how the relationship develops.',
+    e2: 'Choose carefully. There are no obvious right answers — only consequences.'
+  };
+  const wait = ms => new Promise(res => { if (briefSkip || reduce) return res(); const t = setTimeout(res, ms); skipWake.push(() => { clearTimeout(t); res(); }); });
+  function reveal(el) { el.classList.add('in'); }
+  function typeInto(el, text, tok) {
+    return new Promise(res => {
+      let i = 0;
+      const paint = n => { el.innerHTML = ''; const a = document.createElement('span'); a.textContent = text.slice(0, n); const b = document.createElement('span'); b.className = 'off'; b.textContent = text.slice(n); el.append(a, b); };
+      paint(0); Snd.reveal();
+      if (briefSkip || reduce) { paint(text.length); return res(); }
+      const iv = setInterval(() => {
+        if (tok !== briefTok || briefSkip) { clearInterval(iv); paint(text.length); return res(); }
+        i++; paint(i); if (i % 4 === 0) Snd.tick(); if (i >= text.length) { clearInterval(iv); res(); }
+      }, 26);
+      skipWake.push(() => { clearInterval(iv); paint(text.length); res(); });
+    });
+  }
+  function resetBrief() {
+    briefSkip = false; skipWake = [];
+    document.querySelectorAll('#dgBrief .pre').forEach(e => e.classList.remove('in'));
+    ['bP1', 'bP2', 'bP3', 'bE1', 'bE2'].forEach(id => $(id).innerHTML = `<span class="off">${BRIEF[id.replace('bP', 'p').replace('bE', 'e')]}</span>`);
+    document.querySelectorAll('#dgBrief .b-card canvas').forEach(cv => drawSprite(cv, cv.parentNode.dataset.char, 'happy', false, false));
+    $('dgBriefSkip').classList.remove('hidden');
+  }
+  async function runBrief() {
+    const tok = ++briefTok; resetBrief();
+    const ok = () => tok === briefTok;
+    await wait(250); if (!ok()) return; reveal($('bFlags'));
+    await wait(1000); if (!ok()) return; reveal($('bHead')); Snd.reveal();
+    await wait(1100); if (!ok()) return;
+    await typeInto($('bP1'), BRIEF.p1, tok); await wait(500); if (!ok()) return;
+    await typeInto($('bP2'), BRIEF.p2, tok); await wait(500); if (!ok()) return;
+    await typeInto($('bP3'), BRIEF.p3, tok); await wait(600); if (!ok()) return;
+    for (const c of document.querySelectorAll('#dgBrief .b-card')) { reveal(c); Snd.select(); await wait(1000); if (!ok()) return; }
+    await wait(300); if (!ok()) return;
+    await typeInto($('bE1'), BRIEF.e1, tok); await wait(450); if (!ok()) return;
+    await typeInto($('bE2'), BRIEF.e2, tok); await wait(500); if (!ok()) return;
+    document.querySelectorAll('#dgBrief .pre').forEach(reveal); $('dgBriefSkip').classList.add('hidden');
+    $('dgBrief').scrollTo && $('dgBrief').scrollTo({ top: 9999, behavior: 'smooth' });
+  }
+  $('dgBriefSkip').addEventListener('click', () => { briefSkip = true; skipWake.splice(0).forEach(f => f()); });
+  $('dgStartMission').addEventListener('click', () => { Snd.cont(); fadeSwap(startGame, true); });
+
+  function beginMission() {
+    if (briefSeen) { fadeSwap(startGame, true); return; }          // briefing plays once, before the first game
+    fadeSwap(() => { show('dgTitle', false); show('dgBrief', true); runBrief(); }, true);
+  }
+
   /* ---------------- Controls ---------------- */
-  $('dgBegin').addEventListener('click', () => { Snd.ensure(); Snd.cont(); fadeSwap(startGame, true); });
+  $('dgReturn').addEventListener('click', () => {
+    const url = $('dg').dataset.returnUrl;
+    const ev = new CustomEvent('diplomat:return', { bubbles: true, cancelable: true });
+    if ($('dg').dispatchEvent(ev) && url) { window.location.href = url; return; }
+    fadeSwap(restart, false); window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+  $('dgBegin').addEventListener('click', () => { Snd.ensure(); Snd.cont(); beginMission(); });
   $('dgHowBtn').addEventListener('click', () => { Snd.ensure(); Snd.theme('title'); show('dgHow', true); });
   $('dgHowClose').addEventListener('click', () => show('dgHow', false));
   $('dgSetBtn').addEventListener('click', () => { Snd.ensure(); Snd.theme('title'); show('dgSet', true); });
