@@ -2,7 +2,7 @@
   const I = DiplomatI18N;
   // Shared leaderboard (Supabase). Fill these in (see README) or set window.DIPLOMAT_CONFIG before this script.
   // Only the project URL and the PUBLIC anon key belong here. Never the service_role key.
-  const CFG = Object.assign({ supabaseUrl: '', supabaseAnonKey: '' }, window.DIPLOMAT_CONFIG || {});
+  const CFG = Object.assign({ supabaseUrl: 'https://ftxtjcaaedjeqqwcgeoa.supabase.co', supabaseAnonKey: 'sb_publishable_sEuz6kUJaVHH0900tmp1Kg_bW-N3jI7' }, window.DIPLOMAT_CONFIG || {});
   let lang = 'en';
   try { const s = localStorage.getItem('diplomat.lang'); if (s === 'fr' || s === 'en') lang = s; } catch (e) { }
   const T = (key, vars) => {
