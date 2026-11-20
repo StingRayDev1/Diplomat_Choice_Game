@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DIPLOMAT — INDIA × FRANCE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+/* ===== Page shell (stands in for the host website) ===== */
+html,body{margin:0;background:#0b1026;color:#e8ecf8;font-family:'Nunito',system-ui,sans-serif}
+.host-wrap{max-width:1100px;margin:0 auto;padding:16px}
+
+/* ===== Game component (all styles scoped under #dg) ===== */
+#dg{--navy:#0d1230;--ink:#1d2340;--blue:#2a4fb0;--saffron:#ff9933;--red:#d7373f;--cream:#fffdf5;--gold:#f3c34a;
+  font-family:'Nunito',system-ui,sans-serif;color:#fff;user-select:none;-webkit-user-select:none}
+#dg *{box-sizing:border-box}
+#dg button{font-family:inherit;cursor:pointer}
+#dg .frame{border:4px solid var(--navy);background:#0d1230;box-shadow:0 0 0 3px #3a4a8f,0 10px 30px rgba(0,0,0,.5);border-radius:6px;overflow:hidden}
+#dg .top{background:linear-gradient(#141c4a,#0d1230);padding:10px 14px 12px;position:relative}
+#dg .top::after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;background:linear-gradient(90deg,#ff9933 0 25%,#fff 25% 50%,#0055a4 50% 75%,#ef4135 75%)}
+#dg .titlebar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+#dg h2{font-family:'Press Start 2P',monospace;font-size:clamp(11px,2.2vw,16px);margin:0;letter-spacing:1px;color:#fff;line-height:1.4}
+#dg .scene-name{font-family:'Press Start 2P',monospace;font-size:10px;color:#ffd98a;background:#1b2560;border:2px solid #3a4a8f;padding:6px 8px;border-radius:4px}
+#dg .audio{margin-left:auto;display:flex;align-items:center;gap:8px}
+#dg .ibtn{width:36px;height:36px;border-radius:8px;border:2px solid #3a4a8f;background:#161f55;color:#fff;font-size:17px;line-height:1;padding:0}
+#dg .ibtn:hover{background:#22308a}
+#dg .ibtn.off{opacity:.45;text-decoration:line-through}
+#dg input[type=range]{width:90px;accent-color:#7da2ff}
+#dg .hud{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+#dg .stat{background:#111a46;border:2px solid #2d3a85;border-radius:8px;padding:7px 10px}
+#dg .stat-h{display:flex;align-items:center;gap:6px;font-weight:800;font-size:14px;margin-bottom:5px}
+#dg .stat-h .v{margin-left:auto;font-family:'Press Start 2P',monospace;font-size:10px;color:#fff}
+#dg .bar{height:11px;background:#070b22;border:2px solid #263070;border-radius:6px;overflow:hidden}
+#dg .fill{height:100%;width:50%;transition:width .9s cubic-bezier(.3,.8,.3,1);border-radius:4px}
+#dg .f-trust{background:linear-gradient(90deg,#27c46b,#7ff0a8)}
+#dg .f-diplomacy{background:linear-gradient(90deg,#7a56e8,#b79bff)}
+#dg .f-knowledge{background:linear-gradient(90deg,#e8b020,#ffe27a)}
+#dg .f-cooperation{background:linear-gradient(90deg,#16b8c9,#7defff)}
+
+#dg .stage{position:relative;min-height:600px;overflow:hidden;background:#0b1026}
+#dg .bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;image-rendering:pixelated;transition:opacity .6s}
+#dg .shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,8,25,.05),rgba(5,8,25,.35));pointer-events:none}
+#dg .screen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center;z-index:5;animation:fadein .6s both}
+#dg .hidden{display:none!important}
+@keyframes fadein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* title */
+#dg .logo{font-family:'Press Start 2P',monospace;font-size:clamp(26px,6vw,52px);color:#fff;text-shadow:4px 4px 0 #0d1230,0 0 24px rgba(255,200,120,.45);margin:0;letter-spacing:3px}
+#dg .logo-sub{font-family:'Press Start 2P',monospace;font-size:clamp(12px,2.6vw,22px);margin:14px 0 6px;color:#fff;text-shadow:3px 3px 0 #0d1230}
+#dg .logo-sub .x{color:#ff9933}#dg .logo-sub .y{color:#6ea0ff}
+#dg .tagline{font-weight:800;font-size:clamp(14px,2vw,18px);text-shadow:2px 2px 0 #0d1230;margin:0 0 22px;color:#ffe9c0}
+#dg .menu{display:flex;flex-direction:column;gap:10px;width:min(280px,80%)}
+#dg .btn{font-family:'Press Start 2P',monospace;font-size:11px;padding:14px 16px;border-radius:8px;border:3px solid #0d1230;background:#1b2a6b;color:#fff;box-shadow:0 4px 0 #0d1230;transition:transform .1s,background .15s}
+#dg .btn:hover{background:#2a40a0;transform:translateY(-2px)}
+#dg .btn:active{transform:translateY(2px);box-shadow:0 1px 0 #0d1230}
+#dg .btn.primary{background:linear-gradient(#e8574f,#b92f2f);font-size:13px}
+#dg .btn.primary:hover{background:linear-gradient(#f06a62,#cc3a3a)}
+#dg .btn.gold{background:linear-gradient(#f6cf5e,#d9a427);color:#1d2340}
+
+/* play */
+#dg .play{position:relative;z-index:3;display:flex;gap:24px;align-items:flex-end;padding:22px 26px;min-height:600px;animation:fadein .5s both}
+#dg .char{flex:0 0 300px;position:relative;align-self:flex-end}
+#dg .char canvas{width:100%;height:auto;image-rendering:pixelated;display:block;animation:bob 1.8s steps(2) infinite}
+@keyframes bob{0%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+#dg .plate{position:absolute;left:50%;bottom:6px;transform:translateX(-50%);font-family:'Press Start 2P',monospace;font-size:10px;line-height:1.5;background:#f2dfae;color:#2a1c0c;border:3px solid #2a1c0c;padding:7px 10px;border-radius:4px;white-space:nowrap;text-align:center;box-shadow:0 3px 0 rgba(0,0,0,.4)}
+#dg .talk{flex:1;align-self:center;display:flex;flex-direction:column;gap:14px;max-width:640px;margin-left:auto}
+#dg .bubble{position:relative;background:var(--cream);color:var(--ink);border:4px solid var(--ink);border-radius:16px;padding:18px 22px;font-size:clamp(18px,2.3vw,23px);font-weight:800;line-height:1.4;min-height:112px;box-shadow:0 6px 0 rgba(0,0,0,.3);cursor:pointer}
+#dg .bubble::before{content:"";position:absolute;left:-22px;bottom:26px;border:12px solid transparent;border-right:14px solid var(--ink)}
+#dg .bubble::after{content:"";position:absolute;left:-15px;bottom:29px;border:9px solid transparent;border-right:11px solid var(--cream)}
+#dg .choices{display:grid;gap:10px}
+#dg .choice{position:relative;text-align:left;padding:13px 16px 13px 42px;background:#f6f1e3;color:var(--ink);border:3px solid var(--ink);border-radius:10px;font-size:clamp(15px,1.9vw,18px);font-weight:800;line-height:1.3;box-shadow:0 4px 0 rgba(0,0,0,.35);transition:transform .12s,background .15s,opacity .25s;animation:fadein .35s both}
+#dg .choice::before{content:"▶";position:absolute;left:15px;top:50%;transform:translateY(-50%);font-size:12px;color:var(--blue)}
+#dg .choice:not(:disabled):hover{background:#fff;transform:translateY(-2px)}
+#dg .choice:disabled{cursor:default}
+#dg .choice.chosen{background:#ffe9a8;border-color:#b98515}
+#dg .choice.chosen::before{color:#b98515}
+#dg .choice.dim{opacity:.5}
+#dg .cont-row{display:flex;align-items:center;gap:14px;min-height:50px}
+#dg .recorded{font-weight:800;font-size:14px;color:#9af0bd;background:rgba(10,40,25,.8);border:2px solid #2fae6a;border-radius:8px;padding:7px 12px;animation:fadein .4s both}
+#dg .cont{margin-left:auto;animation:fadein .4s both,pulse 1.4s ease-in-out .5s infinite}
+@keyframes pulse{50%{transform:translateY(-3px)}}
+
+/* transition card */
+#dg .trans{background:rgba(5,8,25,.78)}
+#dg .trans p{font-size:clamp(20px,3vw,28px);font-weight:800;max-width:620px;line-height:1.45;margin:0 0 26px;text-shadow:2px 2px 0 #000}
+/* results */
+#dg .res{background:rgba(6,10,32,.72);overflow:auto;justify-content:flex-start;padding-top:28px}
+#dg .end-title{font-family:'Press Start 2P',monospace;font-size:clamp(18px,4vw,34px);margin:0 0 12px;line-height:1.3;text-shadow:3px 3px 0 #000}
+#dg .end-text{max-width:640px;font-size:clamp(15px,2vw,19px);font-weight:700;line-height:1.5;margin:0 0 18px}
+#dg .profile{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;align-items:stretch;margin-bottom:18px}
+#dg .pcard{background:rgba(17,26,70,.92);border:3px solid #3a4a8f;border-radius:10px;padding:12px 14px;min-width:120px}
+#dg .pcard .ic{font-size:26px}
+#dg .pcard .nm{font-weight:800;font-size:14px;margin:2px 0}
+#dg .pcard .num{font-family:'Press Start 2P',monospace;font-size:20px}
+#dg .pscore{background:linear-gradient(#3a2a08,#241a05);border:4px solid var(--gold);border-radius:10px;padding:12px 20px;display:flex;flex-direction:column;justify-content:center;box-shadow:0 0 22px rgba(243,195,74,.35)}
+#dg .pscore .nm{font-family:'Press Start 2P',monospace;font-size:10px;color:var(--gold);line-height:1.6}
+#dg .pscore .num{font-family:'Press Start 2P',monospace;font-size:28px;margin-top:6px}
+#dg .end-1{color:#8dffb5}#dg .end-2{color:#8fb7ff}#dg .end-3{color:#ffd77a}#dg .end-4{color:#ff8a8a}
+/* modals */
+#dg .modal{background:rgba(5,8,25,.88);z-index:8}
+#dg .panel{background:#141c4a;border:4px solid #3a4a8f;border-radius:12px;padding:20px 24px;max-width:520px;text-align:left;box-shadow:0 8px 0 rgba(0,0,0,.4)}
+#dg .panel h3{font-family:'Press Start 2P',monospace;font-size:13px;margin:0 0 14px;color:#ffd98a}
+#dg .panel li{margin:0 0 9px;font-weight:700;line-height:1.45}
+#dg .panel .row{display:flex;align-items:center;gap:12px;margin:12px 0}
+#dg .panel .row input[type=range]{flex:1;width:auto}
+
+#dg .lb-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+#dg .lb-submit{display:flex;gap:8px;justify-content:center;align-items:center;flex-wrap:wrap;margin:16px auto 8px;max-width:560px}
+#dg .lb-submit input{min-width:0;width:min(240px,100%);padding:11px 13px;border:2px solid #5969a8;border-radius:7px;background:#0d1438;color:#fff;font:700 14px Nunito,system-ui,sans-serif}
+#dg .lb-status{min-height:22px;margin:8px auto;color:#ffd98a;font-weight:800;font-size:13px}
+#dg .lb-list{width:min(560px,100%);max-height:48vh;overflow:auto;margin:12px auto;text-align:left}
+#dg .lb-row{display:grid;grid-template-columns:42px 1fr 65px;gap:10px;align-items:center;padding:10px 12px;border-bottom:1px solid #394778;background:rgba(13,20,56,.65);font-weight:800}
+#dg .lb-row.head{position:sticky;top:0;background:#26366f;color:#ffd98a;z-index:1}
+#dg .lb-empty{padding:18px;text-align:center;color:#cbd3f2}
+#dg .lb-note{font-size:12px;color:#cbd3f2;line-height:1.4;margin:8px auto}
+
+#dg .fade{position:absolute;inset:0;background:#050819;opacity:0;pointer-events:none;transition:opacity .5s;z-index:9}
+#dg .fade.on{opacity:1}
+#dg .restart{font-size:12px}
+
+/* ===== Mission briefing ===== */
+#dg .brief{justify-content:flex-start;overflow:auto;background:rgba(6,10,36,.82);padding:22px 18px 26px;gap:0}
+#dg .brief .skip{position:absolute;right:12px;top:10px;font-family:'Press Start 2P',monospace;font-size:9px;color:#9fb3ee;background:none;border:2px solid #2d3a85;border-radius:6px;padding:7px 9px}
+#dg .brief .skip:hover{color:#fff;border-color:#6b82d6}
+#dg .pre{opacity:0;transform:translateY(8px)}
+#dg .pre.in{opacity:1;transform:none;transition:opacity .7s,transform .7s}
+#dg .b-flags{display:flex;align-items:center;gap:14px;justify-content:center;margin:10px 0 14px}
+#dg .b-title{font-family:'Press Start 2P',monospace;font-size:clamp(11px,2.4vw,18px);margin:0;line-height:1.5;text-shadow:3px 3px 0 #0d1230}
+#dg .flag{position:relative;flex:none;width:46px;height:31px;border:3px solid #0d1230;box-shadow:0 3px 0 rgba(0,0,0,.4)}
+#dg .flag.in{background:linear-gradient(#ff9933 0 33.3%,#fff 33.3% 66.6%,#138808 66.6%)}
+#dg .flag.in::after{content:"";position:absolute;left:50%;top:50%;width:7px;height:7px;margin:-4px 0 0 -4px;background:#1a3a9a}
+#dg .flag.fr{background:linear-gradient(90deg,#0055a4 0 33.3%,#fff 33.3% 66.6%,#ef4135 66.6%)}
+#dg .b-head{font-family:'Press Start 2P',monospace;font-size:clamp(14px,3.2vw,24px);color:#ffd98a;margin:0 0 18px;letter-spacing:2px;text-shadow:3px 3px 0 #0d1230}
+#dg .b-p{max-width:660px;margin:0 0 12px;font-size:clamp(15px,2vw,19px);font-weight:700;line-height:1.5;text-shadow:1px 1px 0 #000}
+#dg .b-p .off{opacity:0}
+#dg .b-p.b-end{color:#ffe9c0;font-weight:800}
+#dg .b-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;width:min(820px,100%);margin:8px 0 14px}
+#dg .b-card{display:flex;align-items:center;gap:10px;text-align:left;background:linear-gradient(#18225a,#111a46);border:3px solid #3a4a8f;border-radius:10px;padding:10px 12px;box-shadow:0 4px 0 rgba(0,0,0,.4)}
+#dg .b-card canvas{width:52px;height:auto;flex:none;image-rendering:pixelated;background:#0b1236;border:2px solid #2d3a85;border-radius:6px}
+#dg .b-card .n{font-family:'Press Start 2P',monospace;font-size:9px;line-height:1.6;color:#ffd98a;margin-bottom:5px}
+#dg .b-card .s{font-weight:800;font-size:14px;line-height:1.3}
+#dg .b-start{margin-top:8px}
+
+/* ===== Secret choices + Diplomatic Disaster ===== */
+#dg .choice.secret{border-style:dashed}
+#dg .stat.hit{animation:hit .7s;border-color:#ff5a5a;box-shadow:0 0 14px rgba(255,80,80,.75)}
+@keyframes hit{0%,100%{transform:none}15%{transform:translateX(-6px)}30%{transform:translateX(6px)}45%{transform:translateX(-4px)}60%{transform:translateX(3px)}}
+#dg .stage.shake{animation:shake .6s}
+@keyframes shake{0%,100%{transform:none}20%{transform:translate(-4px,2px)}40%{transform:translate(4px,-2px)}60%{transform:translate(-3px,-1px)}80%{transform:translate(2px,2px)}}
+#dg .pop{position:absolute;left:50%;top:12%;font-size:56px;animation:popup .9s forwards;pointer-events:none}
+@keyframes popup{0%{transform:translate(-50%,0) scale(.3);opacity:0}30%{transform:translate(-50%,-10px) scale(1.2);opacity:1}100%{transform:translate(-50%,-40px) scale(1);opacity:0}}
+#dg .res.disaster{background:linear-gradient(180deg,rgba(14,6,34,.9) 0,rgba(14,6,34,.62) 52%,rgba(14,6,34,0) 82%)}
+#dg .badge{font-family:'Press Start 2P',monospace;font-size:10px;color:#1d2340;background:linear-gradient(#ffe27a,#f3c34a);border:3px solid #0d1230;border-radius:20px;padding:8px 14px;margin-bottom:14px;animation:wob 1.6s ease-in-out infinite}
+#dg .res.disaster .end-title{color:#ff9bd0;animation:wob 1.8s ease-in-out infinite;text-shadow:3px 3px 0 #000,0 0 18px rgba(255,120,200,.5)}
+@keyframes wob{0%,100%{transform:rotate(-1.5deg)}50%{transform:rotate(1.5deg)}}
+#dg .res .btns{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;align-items:center}
+#dg .btn.big{font-size:15px;padding:18px 26px}
+#dg .rain{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:-1}
+#dg .rain span{position:absolute;top:-40px;font-size:26px;animation:fall linear infinite}
+@keyframes fall{to{transform:translateY(720px) rotate(360deg)}}
+
+@media (max-width:760px){
+  #dg .b-cards{grid-template-columns:1fr}
+  #dg .hud{grid-template-columns:repeat(2,1fr);gap:8px}
+  #dg .play{flex-direction:column;align-items:stretch;gap:14px;padding:14px;min-height:0}
+  #dg .stage{min-height:640px}
+  #dg .char{flex:none;width:140px;align-self:flex-start;margin-bottom:6px}
+  #dg .plate{font-size:8px;padding:5px 7px}
+  #dg .talk{margin-left:0;max-width:none}
+  #dg .bubble::before,#dg .bubble::after{left:34px;bottom:auto;top:-24px;border-right-color:transparent}
+  #dg .bubble::before{border-bottom:14px solid var(--ink);border-top-color:transparent;top:-30px;border-width:12px}
+  #dg .bubble::after{border-bottom:11px solid var(--cream);border-top-color:transparent;top:-22px;border-width:9px;left:37px}
+  #dg input[type=range]{width:64px}
+}
+@media (prefers-reduced-motion:reduce){#dg *{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="host-wrap">
+<section id="dg" aria-label="DIPLOMAT — India × France interactive story">
+ <div class="frame">
+  <header class="top" id="dgTop">
+    <div class="titlebar">
+      <h2>DIPLOMAT — INDIA × FRANCE</h2>
+      <div class="scene-name" id="dgScene">Introduction</div>
+      <div class="audio">
+        <button class="ibtn" id="dgMusicBtn" title="Music on/off" aria-label="Toggle music">🎵</button>
+        <button class="ibtn" id="dgMuteBtn" title="Mute / unmute all sound" aria-label="Mute or unmute all sound">🔊</button>
+        <input type="range" id="dgVol" min="0" max="100" value="70" aria-label="Volume">
+        <button class="ibtn restart" id="dgRestartTop" title="Restart game" aria-label="Restart">↻</button>
+      </div>
+    </div>
+    <div class="hud" id="dgHud">
+      <div class="stat"><div class="stat-h"><span aria-hidden="true">🤝</span>Trust<span class="v" id="v-trust">50/100</span></div><div class="bar"><div class="fill f-trust" id="b-trust"></div></div></div>
+      <div class="stat"><div class="stat-h"><span aria-hidden="true">💬</span>Diplomacy<span class="v" id="v-diplomacy">50/100</span></div><div class="bar"><div class="fill f-diplomacy" id="b-diplomacy"></div></div></div>
+      <div class="stat"><div class="stat-h"><span aria-hidden="true">📖</span>Knowledge<span class="v" id="v-knowledge">50/100</span></div><div class="bar"><div class="fill f-knowledge" id="b-knowledge"></div></div></div>
+      <div class="stat"><div class="stat-h"><span aria-hidden="true">👥</span>Cooperation<span class="v" id="v-cooperation">50/100</span></div><div class="bar"><div class="fill f-cooperation" id="b-cooperation"></div></div></div>
+    </div>
+  </header>
+
+  <div class="stage" id="dgStage">
+    <canvas class="bg" id="dgBg" width="192" height="108"></canvas>
+    <div class="shade"></div>
+
+    <!-- Title -->
+    <div class="screen" id="dgTitle">
+      <h1 class="logo">DIPLOMAT</h1>
+      <div class="logo-sub"><span class="y">INDIA</span> <span class="x">×</span> <span class="y">FRANCE</span></div>
+      <p class="tagline">A Diplomatic Interactive Story</p>
+      <div class="menu">
+        <button class="btn primary" id="dgBegin">▶ Begin Mission</button>
+        <button class="btn" id="dgHowBtn">How to Play</button>
+        <button class="btn" id="dgSetBtn">Settings</button>
+        <button class="btn" id="dgTitleLB" type="button">🏆 CLASS LEADERBOARD</button>
+      </div>
+    </div>
+
+    <!-- Mission briefing -->
+    <div class="screen brief hidden" id="dgBrief">
+      <button class="skip" id="dgBriefSkip" type="button">Skip ▸</button>
+      <div class="b-flags pre" id="bFlags"><span class="flag in"></span><h3 class="b-title">DIPLOMAT — INDIA × FRANCE</h3><span class="flag fr"></span></div>
+      <div class="b-head pre" id="bHead">MISSION BRIEFING</div>
+      <p class="b-p" id="bP1"></p>
+      <p class="b-p" id="bP2"></p>
+      <p class="b-p" id="bP3"></p>
+      <div class="b-cards">
+        <div class="b-card pre" data-char="ambassador"><canvas width="48" height="56"></canvas><div><div class="n">01 — FRENCH AMBASSADOR</div><div class="s">Diplomacy &amp; Strategic Relations</div></div></div>
+        <div class="b-card pre" data-char="scientist"><canvas width="48" height="56"></canvas><div><div class="n">02 — FRENCH SPACE SCIENTIST</div><div class="s">Science, Technology &amp; Space</div></div></div>
+        <div class="b-card pre" data-char="culture"><canvas width="48" height="56"></canvas><div><div class="n">03 — FRENCH CULTURAL REPRESENTATIVE</div><div class="s">Culture, Education &amp; People</div></div></div>
+      </div>
+      <p class="b-p b-end" id="bE1"></p>
+      <p class="b-p b-end" id="bE2"></p>
+      <button class="btn primary b-start pre" id="dgStartMission" type="button">▶ START MISSION</button>
+    </div>
+
+    <!-- Play -->
+    <div class="play hidden" id="dgPlay">
+      <div class="char"><canvas id="dgSprite" width="48" height="56"></canvas><div class="plate" id="dgPlate"></div></div>
+      <div class="talk">
+        <div class="bubble" id="dgBubble" aria-live="polite"></div>
+        <div class="choices" id="dgChoices"></div>
+        <div class="cont-row" id="dgContRow"></div>
+      </div>
+    </div>
+
+    <!-- Transition -->
+    <div class="screen trans hidden" id="dgTrans"><p id="dgTransText"></p><button class="btn" id="dgTransBtn">Continue ▶</button></div>
+
+    <!-- Results -->
+    <div class="screen res hidden" id="dgRes">
+      <div class="rain" id="dgRain"></div>
+      <div class="badge hidden" id="dgBadge">★ SECRET ENDING UNLOCKED ★</div>
+      <h3 class="end-title" id="dgEndTitle"></h3>
+      <p class="end-text" id="dgEndText"></p>
+      <p class="end-text hidden" id="dgEndText2"></p>
+      <div class="profile" id="dgProfile"></div>
+      <div class="lb-submit" id="dgScoreSubmit">
+        <input id="dgNickname" type="text" maxlength="16" minlength="2" autocomplete="nickname" placeholder="Enter nickname (2–16 characters)" aria-label="Enter your nickname">
+        <button class="btn primary" id="dgSubmitScore" type="button">SUBMIT SCORE</button>
+      </div>
+      <div class="lb-status" id="dgSubmitStatus" role="status" aria-live="polite"></div>
+      <div class="lb-actions">
+        <button class="btn" id="dgResultsLB" type="button">🏆 VIEW CLASS LEADERBOARD</button>
+      </div>
+      <div class="btns">
+        <button class="btn gold" id="dgAgain">↻ Play Again</button>
+        <button class="btn hidden" id="dgReturn" type="button">RETURN TO WEBSITE</button>
+      </div>
+    </div>
+
+    <!-- Shared class leaderboard -->
+    <div class="screen modal hidden" id="dgLB">
+      <div class="panel" style="width:min(620px,100%);max-height:90%;overflow:auto;text-align:center">
+        <h3>🏆 CLASS LEADERBOARD</h3>
+        <p class="lb-note">Players are ranked by their best partnership score. Ties are ordered by the earlier result.</p>
+        <div class="lb-list" id="dgLBList" aria-live="polite">
+          <div class="lb-empty">Loading leaderboard…</div>
+        </div>
+        <p class="lb-status" id="dgLBStatus" role="status" aria-live="polite"></p>
+        <div class="lb-actions">
+          <button class="btn" id="dgLBRank" type="button">CHECK MY RANK</button>
+          <button class="btn gold" id="dgLBClose" type="button">BACK</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- How to play -->
+    <div class="screen modal hidden" id="dgHow">
+      <div class="panel">
+        <h3>How to Play</h3>
+        <ul style="padding-left:18px;margin:0 0 14px">
+          <li>You represent India in a series of conversations before the India–France summit.</li>
+          <li>Speak with an ambassador, a space scientist and a cultural representative, then advise the Prime Minister.</li>
+          <li>Choose your responses carefully. There are 8 decisions and no way back.</li>
+          <li>Watch the four bars at the top: Trust, Diplomacy, Knowledge and Cooperation. Your final diplomatic profile decides how the summit ends.</li>
+        </ul>
+        <button class="btn" id="dgHowClose">Got it</button>
+      </div>
+    </div>
+
+    <!-- Settings -->
+    <div class="screen modal hidden" id="dgSet">
+      <div class="panel">
+        <h3>Settings</h3>
+        <div class="row"><span>Volume</span><input type="range" id="dgVol2" min="0" max="100" value="70" aria-label="Volume"></div>
+        <div class="row"><button class="btn" id="dgMusic2">Music: On</button><button class="btn" id="dgSfx2">Effects: On</button></div>
+        <button class="btn" id="dgSetClose">Close</button>
+      </div>
+    </div>
+
+    <div class="fade" id="dgFade"></div>
+  </div>
+ </div>
+</section>
+</div>
+
+<!-- ============ GAME DATA + PURE LOGIC (deterministic, no randomness) ============ -->
+<script id="dg-logic">
+const DiplomatLogic = (function () {
+  const initialState = {
+    trust: 50, diplomacy: 50, knowledge: 50, cooperation: 50,
+    currentScene: 0, currentDialogue: 0, choiceHistory: [], gameFinished: false
+  };
+  // d(Trust, Diplomacy, Knowledge, Cooperation)
+  const d = (t, di, k, c) => ({ trust: t, diplomacy: di, knowledge: k, cooperation: c });
+
+  const SCENES = [
+    {
+      id: 'ambassador', name: 'Scene 1 · French Ambassador', speaker: 'French Ambassador', music: 'ambassador', bg: 'ambassador', sprite: 'ambassador',
+      transition: 'You conclude your meeting with the ambassador and head to the space research centre.',
+      dialogues: [
+        { line: 'Welcome. India and France have worked together for decades. What do you think keeps this relationship strong?',
+          choices: [
+            { id: 'A1', text: 'The trust we have built over the years.', delta: d(4, 3, 1, 2), reaction: 'That trust has helped our countries work together through changing times.' },
+            { id: 'A2', text: 'Our shared economic and strategic interests.', delta: d(-1, 1, 3, 2), reaction: 'Those interests matter, although our relationship reaches far beyond practical gains.' },
+            { id: 'A3', text: 'Our governments usually want the same things.', delta: d(0, -2, -1, 1), reaction: 'Shared goals help, but they do not guarantee a strong partnership.' },
+            { id: 'H1', secret: true, emoji: '🍕', text: 'Maybe we should solve every diplomatic issue over pizza and croissants.', delta: d(-15, -15, -10, -15), reaction: 'Pizza and croissants? A tempting menu, but treaties are rarely signed with crumbs on the table.' }
+          ] },
+        { line: 'Interesting. A partnership must keep moving forward. Where should we deepen our cooperation?',
+          choices: [
+            { id: 'A4', text: 'Defence and strategic security.', delta: d(1, 2, 2, 1), reaction: 'Security cooperation has certainly been an important part of our relationship.' },
+            { id: 'A5', text: 'Technology and innovation.', delta: d(1, 2, 3, 3), reaction: 'An exciting choice. Scientific progress can create opportunities for both countries.' },
+            { id: 'A6', text: 'Culture and education.', delta: d(3, 3, 1, 3), reaction: 'Excellent. Strong international relationships must also connect their people.' }
+          ] }
+      ]
+    },
+    {
+      id: 'scientist', name: 'Scene 2 · French Space Scientist', speaker: 'French Space Scientist', music: 'space', bg: 'space', sprite: 'scientist',
+      transition: 'After discussing space cooperation, you travel to meet a representative from the French cultural council.',
+      dialogues: [
+        { line: 'India and France have worked together in space for years. What should the next chapter of this partnership focus on?',
+          choices: [
+            { id: 'S1', text: 'Joint missions and scientific research.', delta: d(2, 2, 3, 4), reaction: 'That is promising. Joint missions can help us achieve more together.' },
+            { id: 'S2', text: 'Earth observation and climate research.', delta: d(2, 3, 4, 3), reaction: 'Precisely. Earth observation can help us understand environmental challenges.' },
+            { id: 'S3', text: 'Developing our technologies separately.', delta: d(-2, 0, 2, -3), reaction: 'Independent research has value, but we should not overlook the benefits of collaboration.' },
+            { id: 'H2', secret: true, emoji: '🚀', text: 'What if we launch a satellite shaped like a giant baguette?', delta: d(-15, -10, -15, -15), reaction: 'A baguette-shaped satellite? The drag coefficient alone would be... remarkable. Let us move on.' }
+          ] },
+        { line: 'Scientific progress requires more than ambition. What makes international cooperation so valuable?',
+          choices: [
+            { id: 'S4', text: 'We can combine our scientific expertise.', delta: d(3, 3, 3, 4), reaction: 'Exactly. Combining expertise allows us to approach problems from different perspectives.' },
+            { id: 'S5', text: 'We can share costs and technology.', delta: d(1, 2, 2, 3), reaction: 'A practical approach. Sharing resources can make ambitious projects possible.' },
+            { id: 'S6', text: 'Each country should protect its interests first.', delta: d(-2, -1, 1, -3), reaction: 'National interests matter, but too much isolation can limit scientific progress.' }
+          ] }
+      ]
+    },
+    {
+      id: 'culture', name: 'Scene 3 · Cultural Representative', speaker: 'Cultural Representative', music: 'culture', bg: 'culture', sprite: 'culture',
+      transition: 'Your meetings are complete. It is now time for the India–France summit.',
+      dialogues: [
+        { line: 'Government agreements are important, but relationships between people matter too. How can young Indians and French people connect?',
+          choices: [
+            { id: 'C1', text: 'Expand student exchange programmes.', delta: d(3, 2, 2, 4), reaction: 'Student exchanges can create friendships and lifelong connections.' },
+            { id: 'C2', text: 'Organise cultural festivals and exchange programmes.', delta: d(4, 3, 2, 4), reaction: 'Wonderful. Culture gives people a chance to understand one another.' },
+            { id: 'C3', text: 'Focus on formal diplomacy instead.', delta: d(-1, -1, -1, -2), reaction: 'Formal diplomacy matters, but it cannot replace connections between ordinary people.' },
+            { id: 'H3', secret: true, emoji: '🥖', text: 'We could settle cultural differences with a baguette-eating competition.', delta: d(-15, -15, -10, -15), reaction: 'A baguette-eating competition? I fear that would only settle who is hungrier.' }
+          ] },
+        { line: 'And what do you think young people gain from these cultural exchanges?',
+          choices: [
+            { id: 'C4', text: 'A better understanding of another culture.', delta: d(3, 3, 3, 3), reaction: 'Exactly. Understanding another culture is the first step towards respecting it.' },
+            { id: 'C5', text: 'New friendships and shared experiences.', delta: d(3, 2, 1, 3), reaction: 'And those friendships can last much longer than any official agreement.' },
+            { id: 'C6', text: 'An opportunity to promote their own country.', delta: d(1, -1, -1, -2), reaction: 'Cultural representation is valuable, but genuine exchange should work both ways.' }
+          ] }
+      ]
+    },
+    {
+      id: 'summit', name: 'Scene 4 · Final India–France Summit', speaker: 'Prime Minister of India', music: 'summit', bg: 'summit', sprite: 'pm',
+      transition: null,
+      dialogues: [
+        { line: 'You have spoken with diplomats, scientists and cultural representatives. Now we need your recommendation. What should India and France prioritise?',
+          choices: [
+            { id: 'F1', text: 'Defence and security.', delta: d(1, 2, 3, 1), reaction: 'Security is an important foundation for our strategic partnership.' },
+            { id: 'F2', text: 'Space, science and technology.', delta: d(1, 2, 4, 3), reaction: 'Innovation can open up an exciting future for both countries.' },
+            { id: 'F3', text: 'Culture, education and people-to-people ties.', delta: d(3, 3, 2, 3), reaction: 'People must remain at the centre of international relationships.' },
+            { id: 'F4', text: 'A balanced partnership across all these areas.', delta: d(3, 4, 2, 4), reaction: 'A comprehensive partnership gives us the opportunity to grow together.' },
+            { id: 'H4', secret: true, emoji: '🎬', text: 'Forget diplomacy. Let\'s make an India–France Bollywood musical.', delta: d(-20, -20, -15, -20), reaction: 'A musical? An imaginative suggestion. But this address will have to remain... less choreographed.' }
+          ] },
+        { line: 'One final question. What should define the future of India–France relations?',
+          choices: [
+            { id: 'F5', text: 'Trust and mutual respect.', delta: d(4, 4, 2, 4), reaction: 'Trust and respect are essential to any lasting partnership.' },
+            { id: 'F6', text: 'Ambition and healthy competition.', delta: d(0, -2, 2, -2), reaction: 'Ambition can drive progress, but competition alone cannot build lasting relationships.' },
+            { id: 'F7', text: 'Cooperation between equal partners.', delta: d(3, 4, 2, 4), reaction: 'Well said. Strong partnerships are built by countries that work together as equals.' }
+          ] }
+      ]
+    }
+  ];
+
+  const ENDINGS = {
+    1: { title: 'SUMMIT SUCCESSFUL', text: 'Your balanced diplomatic approach has strengthened the India–France partnership. Trust, communication and cooperation have opened the door to a stronger future.' },
+    2: { title: 'STRATEGIC PARTNERSHIP', text: 'Your understanding of international cooperation has created opportunities for technological and strategic progress. The partnership has a promising future.' },
+    3: { title: 'PROMISING PARTNERSHIP', text: 'Your discussions have kept the partnership moving forward. However, some opportunities for stronger cooperation remain unexplored.' },
+    4: { title: 'DIPLOMATIC SETBACK', text: 'Your decisions have created challenges during the summit. Both countries will need further dialogue and understanding to strengthen their relationship.' },
+    diplomatic_disaster: { title: 'DIPLOMATIC DISASTER', text: 'Your diplomatic career has taken a... creative turn.', text2: 'India–France relations may need a little time to recover.' }
+  };
+
+  function clamp(value) { return Math.min(100, Math.max(0, value)); }
+
+  function applyChoice(attributes, delta) {
+    return {
+      trust: clamp(attributes.trust + delta.trust),
+      diplomacy: clamp(attributes.diplomacy + delta.diplomacy),
+      knowledge: clamp(attributes.knowledge + delta.knowledge),
+      cooperation: clamp(attributes.cooperation + delta.cooperation)
+    };
+  }
+
+  function calculatePartnershipScore(attributes) {
+    return Math.round(
+      attributes.trust * 0.30 +
+      attributes.diplomacy * 0.25 +
+      attributes.knowledge * 0.20 +
+      attributes.cooperation * 0.25
+    );
+  }
+
+  // Evaluated strictly in order; first match wins. The secret ending is checked first.
+  function determineEnding(a, P) {
+    if (a.trust <= 15 && a.diplomacy <= 15 && a.knowledge <= 15 && a.cooperation <= 15) return 'diplomatic_disaster';
+    if (P >= 68 && a.trust >= 65 && a.diplomacy >= 65 && a.cooperation >= 65) return 1;
+    if (P >= 60 && a.knowledge >= 65 && a.cooperation >= 65) return 2;
+    if (P >= 50) return 3;
+    return 4;
+  }
+
+  function freshState() { return JSON.parse(JSON.stringify(initialState)); }
+
+  function findChoice(id) {
+    for (const s of SCENES) for (const dl of s.dialogues) for (const c of dl.choices) if (c.id === id) return c;
+    return null;
+  }
+
+  return { initialState, SCENES, ENDINGS, clamp, applyChoice, calculatePartnershipScore, determineEnding, freshState, findChoice };
+})();
+</script>
+
+<!-- ============ UI: art, audio, game controller ============ -->
+<script id="dg-ui">
+(function () {
+  const L = DiplomatLogic;
+  const $ = id => document.getElementById(id);
+  const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------------- Pixel backgrounds (procedural, 192x108) ---------------- */
+  const BW = 192, BH = 108;
+  const R = (c, x, y, w, h, col) => { c.fillStyle = col; c.fillRect(Math.round(x), Math.round(y), Math.round(w), Math.round(h)); };
+  const hex = h => [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)];
+  const lerpC = (a, b, t) => { const A = hex(a), B = hex(b); return 'rgb(' + A.map((v, i) => Math.round(v + (B[i] - v) * t)).join(',') + ')'; };
+  const shade = (h, amt) => { const A = hex(h).map(v => Math.max(0, Math.min(255, v + amt))); return 'rgb(' + A.join(',') + ')'; };
+  function rng(seed) { return () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; }; }
+  function vgrad(c, y0, y1, stops) {
+    for (let y = y0; y < y1; y++) {
+      const yy = y0 + Math.floor((y - y0) / 3) * 3;
+      const t = (yy - y0) / (y1 - y0);
+      let i = 0; while (i < stops.length - 2 && t > stops[i + 1][0]) i++;
+      const [p0, c0] = stops[i], [p1, c1] = stops[i + 1];
+      const u = Math.min(1, Math.max(0, (t - p0) / (p1 - p0)));
+      R(c, 0, y, BW, 1, lerpC(c0, c1, u));
+    }
+  }
+  function stars(c, n, seed, ymax, col) {
+    const r = rng(seed);
+    for (let i = 0; i < n; i++) R(c, r() * BW, r() * ymax, 1, 1, col || '#fff');
+  }
+  function indiaFlag(c, x, y, w, h) {
+    R(c, x - 1, y, 1, h + 40, '#c9b99a');
+    R(c, x, y, w, h / 3, '#ff9933'); R(c, x, y + h / 3, w, h / 3, '#fff'); R(c, x, y + 2 * h / 3, w, h / 3 + 1, '#138808');
+    R(c, x + w / 2 - 1, y + h / 2 - 1, 3, 3, '#1a3a9a');
+  }
+  function franceFlag(c, x, y, w, h, ph) {
+    R(c, x - 1, y, 1, h + 40, '#c9b99a');
+    for (let i = 0; i < w; i++) {
+      const o = Math.round(Math.sin(i / 3 + (ph || 0)) * 1);
+      const col = i < w / 3 ? '#0055a4' : i < 2 * w / 3 ? '#fff' : '#ef4135';
+      R(c, x + i, y + o, 1, h, col);
+    }
+  }
+  function eiffel(c, cx, top, bot, col, hi) {
+    for (let y = top; y <= bot; y++) {
+      const t = (y - top) / (bot - top);
+      const hw = Math.round(1 + 20 * Math.pow(t, 1.7));
+      if (t > 0.78) {
+        const lw = Math.round(3 + (t - 0.78) * 14);
+        R(c, cx - hw, y, lw, 1, col); R(c, cx + hw - lw, y, lw, 1, col);
+        if (t < 0.84) R(c, cx - hw, y, hw * 2, 1, col);
+      } else {
+        for (let x = cx - hw; x <= cx + hw; x++) { if (t > 0.3 && ((x + y) % 4 === 0)) continue; R(c, x, y, 1, 1, col); }
+      }
+    }
+    [0.3, 0.55].forEach(t => { const y = top + Math.round((bot - top) * t); const hw = Math.round(1 + 20 * Math.pow(t, 1.7)) + 2; R(c, cx - hw, y, hw * 2, 2, hi); });
+    R(c, cx, top - 6, 1, 6, hi);
+  }
+  const BG = {
+    title(c) {
+      vgrad(c, 0, BH, [[0, '#0f1b4d'], [0.4, '#40307f'], [0.75, '#cc5a7c'], [1, '#f8a24d']]);
+      stars(c, 50, 7, 45);
+      const r = rng(21);
+      for (let i = 0; i < 6; i++) R(c, r() * BW, 40 + r() * 30, 18 + r() * 24, 2, 'rgba(255,170,150,.35)');
+      // skyline
+      const rb = rng(5); let x = 0; while (x < BW) { const w = 5 + Math.floor(rb() * 8), h = 8 + Math.floor(rb() * 16); R(c, x, BH - 16 - h, w, h + 16, '#2a1f4d'); if (rb() > .5) R(c, x + 1, BH - 14 - h, 1, 1, '#ffd27a'); x += w; }
+      // India Gate
+      R(c, 28, 54, 40, 4, '#d9b48a'); R(c, 31, 50, 34, 4, '#e2c39c'); R(c, 30, 58, 36, 44, '#c9a27a'); R(c, 30, 58, 4, 44, '#b58d65'); R(c, 62, 58, 4, 44, '#b58d65');
+      R(c, 40, 68, 16, 34, '#3a2a58'); R(c, 41, 65, 14, 3, '#3a2a58'); R(c, 43, 63, 10, 2, '#3a2a58');
+      R(c, 38, 76, 1, 3, '#ffe39a'); R(c, 57, 76, 1, 3, '#ffe39a');
+      R(c, 46, 48, 4, 2, '#e2c39c');
+      // lawn
+      R(c, 0, BH - 12, BW, 12, '#2a3d5a'); R(c, 0, BH - 12, BW, 1, '#4a5f7e');
+      // Eiffel
+      eiffel(c, 148, 24, 100, '#2c2040', '#8a5b7b');
+      indiaFlag(c, 6, 5, 30, 20); franceFlag(c, 156, 5, 30, 20, 0);
+      stars(c, 0, 0, 0);
+    },
+    ambassador(c) {
+      R(c, 0, 0, BW, BH, '#5a3a22');
+      for (let x = 0; x < BW; x += 12) { R(c, x, 0, 1, 80, '#3d2514'); R(c, x + 1, 0, 1, 80, '#6b4529'); }
+      R(c, 0, 52, BW, 3, '#3d2514'); R(c, 0, 55, BW, 1, '#7a5233');
+      R(c, 0, 82, BW, 26, '#2b1a10'); for (let x = 0; x < BW; x += 16) R(c, x, 82, 1, 26, '#3a2415');
+      // window
+      R(c, 70, 10, 44, 34, '#d4b27a'); R(c, 73, 13, 38, 28, '#8cb6e8'); R(c, 91, 13, 2, 28, '#d4b27a'); R(c, 73, 26, 38, 2, '#d4b27a');
+      R(c, 78, 30, 14, 11, '#a6c8ee'); R(c, 100, 20, 8, 6, '#cfe3f7');
+      // flags
+      indiaFlag(c, 14, 14, 24, 16); franceFlag(c, 44, 14, 24, 16, 1);
+      // picture
+      R(c, 128, 16, 24, 18, '#c9971c'); R(c, 130, 18, 20, 14, '#27407a'); R(c, 138, 20, 4, 8, '#e8d9a8');
+      // lamp
+      R(c, 165, 40, 2, 30, '#c9971c'); R(c, 158, 30, 16, 10, '#ffd27a'); R(c, 160, 28, 12, 2, '#ffe9b0'); R(c, 150, 24, 32, 30, 'rgba(255,214,140,.12)');
+      // desk
+      R(c, 0, 86, BW, 4, '#a0702e'); R(c, 0, 90, BW, 18, '#5a371c'); R(c, 0, 90, BW, 1, '#7a4c26');
+    },
+    space(c) {
+      vgrad(c, 0, BH, [[0, '#050918'], [0.6, '#0c1a45'], [1, '#14275c']]);
+      stars(c, 90, 3, 80);
+      // planet
+      for (let y = -14; y <= 14; y++) for (let x = -14; x <= 14; x++) if (x * x + y * y <= 196) { const lit = (x + y) < 4; R(c, 36 + x, 22 + y, 1, 1, lit ? '#4a82d0' : '#244a8a'); }
+      R(c, 18, 22, 38, 1, 'rgba(180,220,255,.5)');
+      // screens
+      for (let i = 0; i < 3; i++) { R(c, 6 + i * 22, 52, 20, 14, '#1b2a55'); R(c, 7 + i * 22, 53, 18, 12, '#0b2a5a'); for (let k = 0; k < 4; k++) R(c, 9 + i * 22, 55 + k * 3, 6 + (k * 3 + i * 2) % 9, 1, '#4fd1ff'); }
+      // rocket + tower
+      R(c, 142, 34, 3, 64, '#6b7690'); for (let y = 36; y < 96; y += 6) R(c, 142, y, 12, 1, '#6b7690');
+      R(c, 156, 34, 12, 46, '#eef1f8'); R(c, 156, 34, 3, 46, '#c8cfdf'); R(c, 158, 24, 8, 10, '#eef1f8'); R(c, 160, 18, 4, 6, '#eef1f8'); R(c, 161, 14, 2, 4, '#d7373f');
+      R(c, 156, 50, 12, 3, '#d7373f'); R(c, 156, 53, 12, 2, '#2a4fb0'); R(c, 160, 40, 4, 4, '#4fd1ff');
+      R(c, 152, 72, 4, 12, '#d7373f'); R(c, 168, 72, 4, 12, '#d7373f');
+      R(c, 159, 80, 6, 6, '#ffb347'); R(c, 160, 86, 4, 4, '#ff7a2f');
+      R(c, 0, 92, BW, 16, '#0a1230'); for (let x = 0; x < BW; x += 12) R(c, x, 92, 1, 16, '#16285a'); R(c, 0, 92, BW, 1, '#2a4fa0');
+    },
+    culture(c) {
+      R(c, 0, 0, BW, BH, '#7a4c2c'); vgrad(c, 0, 80, [[0, '#7a4c2c'], [1, '#8f5c33']]);
+      for (let x = 0; x < BW; x += 24) R(c, x, 0, 1, 80, 'rgba(0,0,0,.12)');
+      R(c, 0, 84, BW, 24, '#4a2d18'); for (let x = 0; x < BW; x += 14) R(c, x, 84, 1, 24, '#5d3a20');
+      // window with warm light
+      R(c, 70, 12, 36, 38, '#c9971c'); R(c, 73, 15, 30, 32, '#f6b66a'); R(c, 87, 15, 2, 32, '#c9971c'); R(c, 73, 30, 30, 2, '#c9971c');
+      // painting of Eiffel
+      R(c, 14, 16, 30, 40, '#d4a837'); R(c, 17, 19, 24, 34, '#c6d9ef'); eiffel(c, 29, 27, 52, '#3a4660', '#3a4660');
+      // bookshelf
+      R(c, 130, 8, 58, 78, '#4a2812'); const r = rng(11); const cols = ['#d7373f', '#2a4fb0', '#f3c34a', '#2f8f5a', '#8a56c8', '#e6e0d0', '#ff9933'];
+      for (let s = 0; s < 4; s++) { const y = 12 + s * 19; R(c, 132, y + 15, 54, 2, '#6b3d1c'); let x = 133; while (x < 184) { const w = 2 + Math.floor(r() * 3), h = 8 + Math.floor(r() * 7); R(c, x, y + 15 - h, w, h, cols[Math.floor(r() * cols.length)]); x += w + 1; } }
+      // lamp + plant
+      R(c, 60, 66, 2, 20, '#c9971c'); R(c, 54, 58, 14, 8, '#ffd27a'); R(c, 44, 52, 34, 34, 'rgba(255,214,140,.12)');
+      R(c, 108, 72, 12, 14, '#a0522d'); R(c, 106, 56, 4, 16, '#2f8f5a'); R(c, 112, 50, 4, 22, '#3fa86a'); R(c, 118, 58, 4, 14, '#2f8f5a');
+    },
+    summit(c) {
+      vgrad(c, 0, BH, [[0, '#0e1a47'], [1, '#1c3270']]);
+      for (let x = 0; x < BW; x += 8) R(c, x, 0, 3, 70, 'rgba(255,255,255,.05)');
+      // banner
+      R(c, 22, 12, 66, 30, '#e8e1c8'); R(c, 24, 14, 62, 26, '#1f3a8f');
+      for (let i = 0; i < 8; i++) R(c, 30 + i * 7, 20, 4, 1, '#b9c6f0');
+      for (let i = 0; i < 6; i++) R(c, 34 + i * 7, 28, 4, 1, '#b9c6f0');
+      indiaFlag(c, 6, 8, 12, 24); franceFlag(c, 176, 8, 12, 24, 0.5);
+      franceFlag(c, 100, 8, 12, 24, 2);
+      R(c, 0, 70, BW, 38, '#10183d');
+      const r = rng(9); for (let row = 0; row < 3; row++) for (let x = -4 + row * 5; x < BW; x += 14) { const y = 78 + row * 10; const col = row === 0 ? '#0a1030' : row === 1 ? '#070b24' : '#040618'; R(c, x + 2, y, 8, 3, col); R(c, x, y + 3, 12, 10, col); if (r() > .8) R(c, x + 3, y, 6, 2, '#2a2230'); }
+    }
+  };
+  /* Secret-ending scene: a summit that has comically fallen apart */
+  function pizza(c, x, y) { for (let r = 0; r < 7; r++) { const w = 9 - r * 1.3; R(c, x + (9 - w) / 2, y + r, w, 1, r === 0 ? '#d99a3a' : '#ffd65a'); } R(c, x + 3, y + 2, 2, 2, '#d7373f'); R(c, x + 4, y + 5, 2, 1, '#d7373f'); }
+  function baguette(c, x, y, len, tilt) { for (let i = 0; i < len; i++) { const yy = y + Math.round(i * tilt); R(c, x + i, yy, 1, 3, '#d99a3a'); R(c, x + i, yy, 1, 1, '#f0c070'); if (i % 5 === 2) R(c, x + i, yy + 1, 1, 1, '#b57a28'); } }
+  function confused(c, x, y, suit, skin, hair) {
+    R(c, x, y + 8, 10, 12, suit); R(c, x - 2, y + 9, 2, 6, suit); R(c, x + 10, y + 4, 2, 8, suit);
+    R(c, x + 1, y, 8, 8, skin); R(c, x + 1, y, 8, 3, hair); R(c, x + 3, y + 4, 1, 2, '#111'); R(c, x + 6, y + 4, 1, 2, '#111'); R(c, x + 4, y + 6, 2, 1, '#7a2b2b');
+    [[1, 0], [2, 0], [3, 1], [2, 2], [2, 3], [2, 5]].forEach(([qx, qy]) => R(c, x + 3 + qx, y - 9 + qy, 1, 1, '#ffe27a'));
+  }
+  BG.disaster = function (c) {
+    vgrad(c, 0, BH, [[0, '#2a1a4a'], [0.55, '#5a2f6e'], [1, '#8a4a6a']]);
+    for (let x = 0; x < BW; x += 10) R(c, x, 0, 5, 64, 'rgba(120,20,40,.35)');
+    // crooked banner
+    for (let i = 0; i < 60; i++) { const o = Math.round(i * 0.25); R(c, 24 + i, 8 + o, 1, 14, '#e8e1c8'); R(c, 24 + i, 10 + o, 1, 10, '#1f3a8f'); }
+    R(c, 24, 8, 1, 30, '#e8e1c8'); R(c, 60, 14, 1, 1, '#b9c6f0');
+    // leaning flags
+    for (let i = 0; i < 50; i++) { R(c, 8 + Math.round(i * 0.3), 8 + i, 1, 1, '#c9b99a'); R(c, 184 - Math.round(i * 0.3), 8 + i, 1, 1, '#c9b99a'); }
+    for (let r = 0; r < 15; r++) { const col = r < 5 ? '#ff9933' : r < 10 ? '#fff' : '#138808'; R(c, 9 + Math.round(r * 0.3), 8 + r, 24, 1, col); }
+    R(c, 20, 14, 3, 3, '#1a3a9a');
+    for (let r = 0; r < 15; r++) { const o = Math.round(r * 0.3); R(c, 160 - o, 8 + r, 8, 1, '#0055a4'); R(c, 168 - o, 8 + r, 8, 1, '#fff'); R(c, 176 - o, 8 + r, 8, 1, '#ef4135'); }
+    // hanging lamp + light cone
+    R(c, 95, 0, 2, 14, '#555'); R(c, 90, 14, 12, 4, '#cfcfcf');
+    for (let r = 0; r < 62; r++) { const w = 6 + r * 0.7; R(c, 96 - w / 2, 18 + r, w, 1, 'rgba(255,240,180,0.07)'); }
+    // floor + dais
+    R(c, 0, 84, BW, 24, '#3a2a4a'); for (let x = 0; x < BW; x += 14) R(c, x, 84, 1, 24, '#4a3a5a'); R(c, 0, 84, BW, 1, '#6a5a7a');
+    R(c, 40, 80, 112, 5, '#5b3a6a');
+    // confetti
+    const r = rng(33); const cc = ['#ff7ab8', '#ffe27a', '#7de0ff', '#8dff9d', '#fff'];
+    for (let i = 0; i < 50; i++) R(c, r() * BW, r() * 90, 2, 1, cc[Math.floor(r() * cc.length)]);
+    // diplomats
+    confused(c, 28, 68, '#1b2a52', '#e8b998', '#5a4a3a');
+    confused(c, 54, 70, '#555b66', '#c58b5d', '#222');
+    confused(c, 114, 68, '#7a2b3a', '#f1c9a5', '#b9bfcb');
+    confused(c, 140, 70, '#2f6f73', '#e0ac85', '#3b2a1f'); pizza(c, 141, 59);
+    confused(c, 166, 68, '#1b2a52', '#c58b5d', '#ddd');
+    // fallen podium
+    R(c, 70, 84, 40, 13, '#6b4423'); R(c, 70, 84, 40, 2, '#8a5a2f'); R(c, 66, 86, 4, 9, '#8a5a2f'); R(c, 86, 87, 8, 8, '#d4a837'); R(c, 88, 89, 4, 4, '#6b4423');
+    R(c, 112, 93, 10, 1, '#333'); R(c, 122, 92, 3, 3, '#555');
+    // papers
+    [[40, 90], [60, 98], [100, 100], [124, 88], [146, 96], [154, 90], [30, 99], [84, 101], [14, 92], [176, 99]].forEach(([x, y]) => { R(c, x, y, 7, 4, '#f4f4f0'); R(c, x, y + 4, 7, 1, 'rgba(0,0,0,.25)'); R(c, x + 1, y + 1, 4, 1, '#aab'); });
+    [[62, 44], [132, 36], [100, 56], [76, 30]].forEach(([x, y]) => { R(c, x, y, 6, 4, '#f4f4f0'); R(c, x + 1, y + 1, 3, 1, '#aab'); });
+    // pizza + baguettes everywhere
+    pizza(c, 58, 91); pizza(c, 120, 97); pizza(c, 24, 96); pizza(c, 98, 90);
+    baguette(c, 36, 94, 24, -0.1); baguette(c, 124, 100, 26, -0.08); baguette(c, 84, 98, 18, 0); baguette(c, 150, 92, 20, 0.1);
+    baguette(c, 106, 76, 14, 0.4);
+  };
+  const bgCanvas = $('dgBg'), bgCtx = bgCanvas.getContext('2d');
+  let curBg = '';
+  function setBg(name) { if (name === curBg) return; curBg = name; bgCtx.clearRect(0, 0, BW, BH); BG[name](bgCtx); }
+
+  /* ---------------- Pixel character sprites ---------------- */
+  const CHARS = {
+    ambassador: { skin: '#e8b998', hair: 'swept', hairCol: '#b9bfcb', outfit: 'suit', name: 'French\nAmbassador' },
+    scientist: { skin: '#f1c9a5', hair: 'bun', hairCol: '#7a4a2a', outfit: 'lab', name: 'Space\nScientist' },
+    culture: { skin: '#e0ac85', hair: 'long', hairCol: '#4b2a1f', outfit: 'scarf', name: 'Cultural\nRepresentative' },
+    pm: { skin: '#c58b5d', hair: 'white', hairCol: '#eceff4', outfit: 'kurta', name: 'Prime Minister\nof India' }
+  };
+  const SW = 48, SH = 56;
+  const off = document.createElement('canvas'); off.width = SW; off.height = SH;
+  const sil = document.createElement('canvas'); sil.width = SW; sil.height = SH;
+  function drawBody(c, cfg) {
+    const o = cfg.outfit;
+    const main = { suit: '#1b2a52', lab: '#f2f5fa', scarf: '#2a2f4a', kurta: '#f3efe6' }[o];
+    R(c, 10, 28, 28, 28, main); R(c, 8, 29, 32, 3, main); R(c, 5, 33, 5, 23, main); R(c, 38, 33, 5, 23, main);
+    c.clearRect(8, 29, 1, 1); c.clearRect(39, 29, 1, 1);
+    R(c, 5, 33, 1, 23, shade(main, -20)); R(c, 42, 33, 1, 23, shade(main, -20));
+    if (o === 'suit') { R(c, 18, 28, 4, 12, '#2a4380'); R(c, 26, 28, 4, 12, '#2a4380'); R(c, 22, 28, 4, 8, '#f4f4f4'); R(c, 23, 30, 2, 10, '#c0392b'); R(c, 31, 36, 2, 2, '#e74c3c'); R(c, 14, 38, 4, 1, '#fff'); }
+    if (o === 'lab') { R(c, 20, 28, 2, 14, '#c9d2e0'); R(c, 26, 28, 2, 14, '#c9d2e0'); R(c, 22, 28, 4, 14, '#3d73b8'); R(c, 31, 38, 6, 5, '#fff'); R(c, 32, 39, 4, 1, '#2b5fa8'); R(c, 32, 41, 4, 1, '#9aa7bd'); R(c, 14, 38, 1, 4, '#d33'); }
+    if (o === 'kurta') { R(c, 10, 30, 10, 26, '#33415c'); R(c, 28, 30, 10, 26, '#33415c'); R(c, 23, 34, 1, 1, '#d4a837'); R(c, 23, 38, 1, 1, '#d4a837'); R(c, 23, 42, 1, 1, '#d4a837'); R(c, 31, 36, 3, 2, '#ff9933'); R(c, 19, 26, 10, 3, '#f3efe6'); }
+    if (o === 'scarf') { R(c, 24, 30, 1, 26, '#222640'); }
+  }
+  function drawSprite(cv, cfgName, expr, blink, talk) {
+    const cfg = CHARS[cfgName]; const c = off.getContext('2d'); c.clearRect(0, 0, SW, SH);
+    const sk = cfg.skin, sd = shade(sk, -30), hc = cfg.hairCol;
+    drawBody(c, cfg);
+    if (cfg.hair === 'long') { // back hair over shoulders
+      for (let y = 8; y < 44; y++) { const w = Math.round(Math.sin(y / 3) * 1); R(c, 11 + w, y, 4, 1, hc); R(c, 33 - w, y, 4, 1, hc); }
+      R(c, 12, 12, 24, 12, hc);
+    }
+    R(c, 21, 22, 6, 7, sd); // neck
+    if (cfg.outfit === 'scarf') { R(c, 16, 25, 16, 5, '#c0392b'); R(c, 22, 29, 5, 13, '#c0392b'); R(c, 22, 34, 5, 1, '#8e2a20'); R(c, 16, 29, 16, 1, '#a82f24'); }
+    // head
+    R(c, 15, 6, 18, 1, sk); R(c, 14, 7, 20, 16, sk); R(c, 15, 23, 18, 1, sk); R(c, 13, 13, 1, 4, sk); R(c, 34, 13, 1, 4, sk);
+    if (cfg.outfit === 'scarf') { R(c, 13, 18, 1, 2, '#f1c40f'); R(c, 34, 18, 1, 2, '#f1c40f'); }
+    // hair front
+    if (cfg.hair === 'swept') { R(c, 15, 3, 17, 2, hc); R(c, 13, 4, 22, 5, hc); R(c, 13, 9, 2, 6, hc); R(c, 33, 9, 2, 6, hc); R(c, 15, 9, 8, 1, shade(hc, -25)); }
+    if (cfg.hair === 'bun') { R(c, 21, 0, 7, 4, hc); R(c, 14, 4, 20, 5, hc); R(c, 13, 6, 22, 4, hc); R(c, 13, 10, 2, 9, hc); R(c, 33, 10, 2, 9, hc); R(c, 15, 9, 18, 2, hc);
+      R(c, 13, 6, 22, 2, '#555b66'); [[15, 1], [26, 1]].forEach(([x, y]) => { R(c, x, y, 8, 7, '#3a3f4a'); R(c, x + 1, y + 1, 6, 5, '#8fdcff'); R(c, x + 2, y + 2, 2, 1, '#fff'); }); }
+    if (cfg.hair === 'long') { R(c, 14, 4, 20, 5, hc); R(c, 13, 6, 22, 4, hc); R(c, 14, 9, 7, 3, hc); R(c, 27, 9, 7, 3, hc); R(c, 18, 5, 6, 1, '#6b3d2c'); R(c, 13, 10, 2, 10, hc); R(c, 33, 10, 2, 10, hc); }
+    if (cfg.hair === 'white') { R(c, 14, 5, 20, 3, hc); R(c, 13, 6, 22, 4, hc); R(c, 13, 10, 2, 5, hc); R(c, 33, 10, 2, 5, hc);
+      R(c, 14, 17, 2, 6, hc); R(c, 32, 17, 2, 6, hc); R(c, 15, 21, 18, 4, hc); R(c, 19, 17, 10, 2, hc); R(c, 17, 24, 14, 1, hc); }
+    // brows
+    const bc = cfg.hair === 'white' ? '#cfd5e0' : shade(hc, -30);
+    if (expr === 'concerned') { R(c, 17, 12, 1, 1, bc); R(c, 18, 11, 3, 1, bc); R(c, 27, 11, 3, 1, bc); R(c, 30, 12, 1, 1, bc); }
+    else { R(c, 17, 11, 4, 1, bc); R(c, 27, 11, 4, 1, bc); }
+    // eyes
+    const ec = '#1a1a2a';
+    if (blink) { R(c, 18, 15, 3, 1, ec); R(c, 27, 15, 3, 1, ec); }
+    else if (expr === 'happy') { [[17, 15], [18, 14], [19, 14], [20, 15], [27, 15], [28, 14], [29, 14], [30, 15]].forEach(([x, y]) => R(c, x, y, 1, 1, ec)); }
+    else { R(c, 18, 13, 3, 3, ec); R(c, 27, 13, 3, 3, ec); R(c, 18, 13, 1, 1, '#fff'); R(c, 27, 13, 1, 1, '#fff'); }
+    if (expr === 'happy') { R(c, 16, 17, 2, 1, '#f08a8a'); R(c, 30, 17, 2, 1, '#f08a8a'); }
+    R(c, 24, 16, 1, 3, sd); // nose
+    // mouth
+    const mc = '#7a2b2b';
+    if (talk) { R(c, 22, 19, 5, 3, mc); R(c, 23, 21, 3, 1, '#d46a6a'); }
+    else if (expr === 'happy') { R(c, 21, 19, 7, 2, mc); R(c, 22, 19, 5, 1, '#fff'); R(c, 20, 18, 1, 1, mc); R(c, 28, 18, 1, 1, mc); }
+    else if (expr === 'concerned') { R(c, 22, 20, 5, 1, mc); R(c, 21, 21, 1, 1, mc); R(c, 27, 21, 1, 1, mc); }
+    else { R(c, 22, 20, 5, 1, mc); R(c, 21, 19, 1, 1, mc); R(c, 27, 19, 1, 1, mc); }
+    if (cfg.outfit === 'kurta') { // podium + mic
+      R(c, 22, 36, 4, 8, '#2b2b33'); R(c, 21, 33, 6, 3, '#555'); R(c, 2, 44, 44, 3, '#8a5a2f'); R(c, 4, 47, 40, 9, '#6b4423'); R(c, 4, 47, 40, 1, '#8a5a2f'); R(c, 20, 49, 8, 7, '#d4a837'); R(c, 22, 51, 4, 3, '#6b4423');
+    }
+    // outline + draw
+    const s = sil.getContext('2d'); s.globalCompositeOperation = 'source-over'; s.clearRect(0, 0, SW, SH); s.drawImage(off, 0, 0);
+    s.globalCompositeOperation = 'source-in'; s.fillStyle = '#0d1024'; s.fillRect(0, 0, SW, SH);
+    const x = cv.getContext('2d'); x.clearRect(0, 0, SW, SH);
+    [[-1, 0], [1, 0], [0, -1], [0, 1]].forEach(([dx, dy]) => x.drawImage(sil, dx, dy));
+    x.drawImage(off, 0, 0);
+  }
+
+  /* ---------------- Audio engine (original, synthesised ambient score) ---------------- */
+  const Snd = (function () {
+    let ctx = null, master, musicBus, sfxBus, fx, cur = null, pending = null, lastTick = 0;
+    const S = { vol: 0.7, music: true, sfx: true, muted: false };
+    const mtof = m => 440 * Math.pow(2, (m - 69) / 12);
+    const THEMES = {
+      title: { bpm: 66, chords: [[50, 57, 62, 66], [47, 54, 59, 62], [43, 55, 59, 62], [45, 57, 61, 64]], pad: 'sawtooth', cut: 650, padG: .028, arp: { type: 'triangle', oct: 12, pat: [0, 1, 2, 3, 2, 1, 2, 3], g: .05, step: .5 }, bass: .09, send: .5 },
+      ambassador: { bpm: 60, chords: [[48, 55, 60, 64], [41, 53, 57, 60], [43, 55, 59, 62], [45, 57, 60, 64]], pad: 'triangle', cut: 900, padG: .05, arp: { type: 'triangle', oct: 12, pat: [0, null, 2, null, 1, null, 2, null], g: .05, step: .5 }, bass: .08, send: .3 },
+      space: { bpm: 72, chords: [[45, 52, 57, 64], [41, 48, 57, 60], [48, 55, 64, 67], [43, 50, 59, 62]], pad: 'sine', cut: 2000, padG: .06, arp: { type: 'sine', oct: 24, pat: [0, null, 2, 3, null, 1, null, 3], g: .045, step: .5 }, bass: .09, send: .7, drone: true },
+      culture: { bpm: 84, chords: [[43, 55, 59, 62], [40, 52, 59, 64], [48, 55, 60, 64], [50, 57, 62, 66]], pad: 'sine', cut: 1500, padG: .05, arp: { type: 'triangle', oct: 12, pat: [0, 1, 2, 1, 3, 2, 1, 2], g: .06, step: .5 }, bass: .08, send: .35 },
+      summit: { bpm: 76, chords: [[50, 57, 62, 66], [43, 55, 59, 62], [47, 54, 59, 62], [45, 57, 61, 64]], pad: 'sawtooth', cut: 1100, padG: .036, arp: { type: 'triangle', oct: 12, pat: [0, 1, 2, 3, 2, 3, 2, 3], g: .055, step: .5 }, bass: .12, send: .45, lead: true }
+    };
+    function ensure() {
+      if (ctx) { if (ctx.state === 'suspended') ctx.resume().catch(() => { }); return true; }
+      try {
+        const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return false;
+        ctx = new AC(); master = ctx.createGain(); const comp = ctx.createDynamicsCompressor(); master.connect(comp); comp.connect(ctx.destination);
+        musicBus = ctx.createGain(); sfxBus = ctx.createGain(); musicBus.connect(master); sfxBus.connect(master);
+        fx = ctx.createGain(); const dl = ctx.createDelay(1.5); dl.delayTime.value = 0.45; const fb = ctx.createGain(); fb.gain.value = 0.4;
+        const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 1700;
+        fx.connect(dl); dl.connect(lp); lp.connect(fb); fb.connect(dl); lp.connect(musicBus);
+        apply(); if (pending) { const p = pending; pending = null; theme(p); }
+        return true;
+      } catch (e) { return false; }
+    }
+    function apply() {
+      if (!ctx) return; const t = ctx.currentTime;
+      master.gain.setTargetAtTime(S.muted ? 0 : S.vol, t, 0.05);
+      musicBus.gain.setTargetAtTime(S.music ? 0.32 : 0, t, 0.12);   // music sits well below dialogue/sfx
+      sfxBus.gain.setTargetAtTime(S.sfx ? 0.6 : 0, t, 0.05);
+    }
+    function voice(th, o) {
+      const osc = ctx.createOscillator(); osc.type = o.type; osc.frequency.value = o.f; if (o.det) osc.detune.value = o.det;
+      const g = ctx.createGain(); const t = o.t, end = t + o.att + o.hold + o.rel;
+      g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(o.peak, t + o.att);
+      if (o.hold > 0) g.gain.setValueAtTime(o.peak, t + o.att + o.hold);
+      g.gain.linearRampToValueAtTime(0.0001, end);
+      let node = osc;
+      if (o.cut) { const f = ctx.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = o.cut; osc.connect(f); node = f; }
+      node.connect(g); g.connect(th.bus);
+      if (o.send) { const s = ctx.createGain(); s.gain.value = o.send; g.connect(s); s.connect(fx); }
+      osc.start(t); osc.stop(end + 0.1);
+    }
+    function bar(th, t) {
+      const T = th.def, beat = 60 / T.bpm, len = beat * 4, ch = T.chords[th.idx % T.chords.length];
+      ch.forEach((m, i) => { [-5, 5].forEach(det => voice(th, { type: T.pad, f: mtof(m), t, att: 1.4, hold: len - 1.2, rel: 1.8, peak: T.padG, cut: T.cut, send: T.send * .4, det })); });
+      voice(th, { type: 'sine', f: mtof(ch[0] - 12), t, att: 0.8, hold: len - 1, rel: 1.4, peak: T.bass });
+      const A = T.arp, step = beat * A.step;
+      A.pat.forEach((p, i) => { if (p === null) return; const m = ch[p % ch.length] + A.oct; voice(th, { type: A.type, f: mtof(m), t: t + i * step, att: 0.015, hold: 0, rel: 1.3, peak: A.g, send: T.send }); });
+      if (T.drone) voice(th, { type: 'sine', f: mtof(ch[0] + 7), t, att: 1.5, hold: len - 1, rel: 2, peak: .03, send: .6 });
+      if (T.lead) voice(th, { type: 'sine', f: mtof(ch[3] + 12), t: t + beat * 2, att: 0.6, hold: beat * 1.5, rel: 1.2, peak: .045, send: .5 });
+    }
+    function theme(name) {
+      if (!ensure()) { pending = name; return; }
+      if (cur && cur.name === name) return;
+      const now = ctx.currentTime;
+      if (cur) { const old = cur; clearInterval(old.timer); old.bus.gain.setTargetAtTime(0.0001, now, 0.7); setTimeout(() => { try { old.bus.disconnect(); } catch (e) { } }, 4500); }
+      const th = { name, def: THEMES[name], idx: 0, bus: ctx.createGain(), next: now + 0.2, timer: null };
+      th.bus.gain.setValueAtTime(0.0001, now); th.bus.gain.setTargetAtTime(1, now + 0.8, 0.9); th.bus.connect(musicBus);
+      const len = 60 / th.def.bpm * 4;
+      const pump = () => { while (th.next < ctx.currentTime + 2.5) { bar(th, th.next); th.next += len; th.idx++; } };
+      pump(); th.timer = setInterval(pump, 500); cur = th;
+    }
+    function tone(f, dur, peak, type, when, f2) {
+      if (!ensure() || !S.sfx) return; const t = ctx.currentTime + (when || 0); const o = ctx.createOscillator(), g = ctx.createGain();
+      o.type = type || 'sine'; o.frequency.setValueAtTime(f, t); if (f2) o.frequency.linearRampToValueAtTime(f2, t + dur);
+      g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(peak, t + 0.008); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      o.connect(g); g.connect(sfxBus); o.start(t); o.stop(t + dur + 0.05);
+    }
+    return {
+      S, theme, ensure, apply, tone,
+      tick() { const n = performance.now(); if (n - lastTick < 45) return; lastTick = n; tone(1150 + (n % 7) * 40, 0.03, 0.05, 'triangle'); },
+      reveal() { tone(660, 0.18, 0.09, 'sine'); tone(990, 0.22, 0.05, 'sine', 0.06); },
+      select() { tone(523, 0.12, 0.16, 'sine'); tone(784, 0.2, 0.16, 'sine', 0.08); },
+      cont() { tone(440, 0.09, 0.1, 'triangle', 0, 520); },
+      whoosh() {
+        if (!ensure() || !S.sfx) return; const t = ctx.currentTime, len = 0.9;
+        const buf = ctx.createBuffer(1, ctx.sampleRate * len, ctx.sampleRate), d = buf.getChannelData(0);
+        for (let i = 0; i < d.length; i++) d[i] = (Math.sin(i * 12.9898) * 43758.5453 % 1) * 2 - 1;
+        const src = ctx.createBufferSource(); src.buffer = buf; const f = ctx.createBiquadFilter(); f.type = 'bandpass'; f.Q.value = 1.2;
+        f.frequency.setValueAtTime(300, t); f.frequency.exponentialRampToValueAtTime(2400, t + len * .8);
+        const g = ctx.createGain(); g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(0.12, t + 0.35); g.gain.linearRampToValueAtTime(0.0001, t + len);
+        src.connect(f); f.connect(g); g.connect(sfxBus); src.start(t);
+      },
+      visibility(h) { if (!ctx) return; h ? ctx.suspend() : ctx.resume(); }
+    };
+  })();
+  document.addEventListener('visibilitychange', () => Snd.visibility(document.hidden));
+
+  /* ---------------- UI state ---------------- */
+  let state = L.freshState();
+  let answered = false, spriteName = 'ambassador', expr = 'neutral', blink = false, talking = false, mouthFlip = false;
+  const shown = { trust: 50, diplomacy: 50, knowledge: 50, cooperation: 50 };
+  const KEYS = ['trust', 'diplomacy', 'knowledge', 'cooperation'];
+  const SUPABASE_URL = 'https://ftxtjcaaedjeqqwcgeoa.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_sEuz6kUJaVHH0900tmp1Kg_b-W-N3jI7';
+  let currentRunId = '';
+  let leaderboardReturn = 'dgTitle';
+  let scoreSubmitted = false;
+
+  const sprite = $('dgSprite');
+  const redraw = () => drawSprite(sprite, spriteName, expr, blink, talking && mouthFlip);
+  setInterval(() => { if (talking) { mouthFlip = !mouthFlip; redraw(); } }, 130);
+  (function blinker() { setTimeout(() => { blink = true; redraw(); setTimeout(() => { blink = false; redraw(); blinker(); }, 140); }, 2600 + Math.random() * 2200); })();
+
+  function show(id, on) { $(id).classList.toggle('hidden', !on); }
+
+  // Supabase RPC calls use the public publishable key. Database access is
+  // restricted by the SQL functions and their SECURITY DEFINER permissions.
+  async function supabaseRpc(functionName, args) {
+    const response = await fetch(SUPABASE_URL + '/rest/v1/rpc/' + functionName, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(args || {})
+    });
+    const body = await response.text();
+    let data = null;
+    try { data = body ? JSON.parse(body) : null; } catch (_) { data = body; }
+    if (!response.ok) {
+      const message = data && (data.message || data.details || data.hint) || body || ('HTTP ' + response.status);
+      throw new Error(message);
+    }
+    return data;
+  }
+
+  function makeRunId() {
+    if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+      const r = Math.random() * 16 | 0;
+      return (c === 'x' ? r : (r & 3 | 8)).toString(16);
+    });
+  }
+
+  function validateNickname(value) {
+    return /^[A-Za-zÀ-ÖØ-öø-ÿ0-9_ -]{2,16}$/.test(value) && value === value.trim();
+  }
+
+  async function submitDiplomatScore() {
+    const input = $('dgNickname');
+    const nickname = input.value.trim();
+    const status = $('dgSubmitStatus');
+    const button = $('dgSubmitScore');
+    if (!validateNickname(nickname)) {
+      status.textContent = 'Use 2–16 characters: letters, numbers, spaces, _ or -.';
+      input.focus();
+      return;
+    }
+    if (!currentRunId) {
+      status.textContent = 'Game run not found. Please restart and try again.';
+      return;
+    }
+    if (scoreSubmitted) {
+      status.textContent = 'This run has already been submitted.';
+      return;
+    }
+    button.disabled = true;
+    button.textContent = 'SUBMITTING…';
+    status.textContent = 'Submitting your score…';
+    try {
+      const result = await supabaseRpc('diplomat_submit_score', {
+        p_nickname: nickname,
+        p_run_id: currentRunId,
+        p_trust: state.trust,
+        p_diplomacy: state.diplomacy,
+        p_knowledge: state.knowledge,
+        p_cooperation: state.cooperation
+      });
+      scoreSubmitted = true;
+      try { localStorage.setItem('diplomat.nick', nickname); } catch (_) {}
+      const messages = {
+        inserted: 'Score submitted!',
+        improved: 'New personal best!',
+        kept: 'Your previous best score was higher, so it was kept.',
+        duplicate_run: 'This game run was already submitted.'
+      };
+      status.textContent = (messages[result.status] || 'Score processed.') + ' Your rank: #' + result.rank + ' · Best: ' + result.best + '/100';
+      button.textContent = 'SCORE SUBMITTED';
+      button.disabled = true;
+    } catch (error) {
+      status.textContent = 'Could not submit score: ' + (error.message || 'Please try again.');
+      button.disabled = false;
+      button.textContent = 'SUBMIT SCORE';
+    }
+  }
+
+  function renderLeaderboard(rows) {
+    const list = $('dgLBList');
+    list.innerHTML = '';
+    if (!Array.isArray(rows) || rows.length === 0) {
+      const empty = document.createElement('div');
+      empty.className = 'lb-empty';
+      empty.textContent = 'No scores yet. Be the first to complete the mission!';
+      list.appendChild(empty);
+      return;
+    }
+    const header = document.createElement('div');
+    header.className = 'lb-row head';
+    ['RANK', 'NICKNAME', 'SCORE'].forEach(value => {
+      const cell = document.createElement('span');
+      cell.textContent = value;
+      header.appendChild(cell);
+    });
+    list.appendChild(header);
+    rows.forEach(row => {
+      const line = document.createElement('div');
+      line.className = 'lb-row';
+      [String(row.rank_no), String(row.nickname), String(row.score) + '/100'].forEach(value => {
+        const cell = document.createElement('span');
+        cell.textContent = value;
+        line.appendChild(cell);
+      });
+      list.appendChild(line);
+    });
+  }
+
+  async function loadLeaderboard() {
+    $('dgLBList').innerHTML = '<div class="lb-empty">Loading leaderboard…</div>';
+    $('dgLBStatus').textContent = '';
+    try {
+      const rows = await supabaseRpc('diplomat_get_leaderboard', { p_limit: 20 });
+      renderLeaderboard(rows);
+    } catch (error) {
+      $('dgLBList').innerHTML = '<div class="lb-empty">The leaderboard could not be loaded.</div>';
+      $('dgLBStatus').textContent = error.message || 'Check your Supabase setup and try again.';
+    }
+  }
+
+  async function checkMyRank() {
+    let nickname = '';
+    try { nickname = localStorage.getItem('diplomat.nick') || ''; } catch (_) {}
+    if (!nickname && $('dgNickname')) nickname = $('dgNickname').value.trim();
+    if (!nickname) {
+      $('dgLBStatus').textContent = 'Submit a score or enter a nickname on the results screen first.';
+      return;
+    }
+    $('dgLBStatus').textContent = 'Checking rank…';
+    try {
+      const rank = await supabaseRpc('diplomat_get_rank', { p_nickname: nickname });
+      $('dgLBStatus').textContent = rank == null
+        ? 'No leaderboard entry found for "' + nickname + '".'
+        : nickname + ' is currently ranked #' + rank + '.';
+    } catch (error) {
+      $('dgLBStatus').textContent = error.message || 'Could not retrieve your rank.';
+    }
+  }
+
+  function openLeaderboard(fromScreen) {
+    leaderboardReturn = fromScreen || 'dgTitle';
+    show(leaderboardReturn, false);
+    show('dgLB', true);
+    loadLeaderboard();
+  }
+
+  function closeLeaderboard() {
+    show('dgLB', false);
+    show(leaderboardReturn, true);
+  }
+
+  function renderHud(animate) {
+    KEYS.forEach(k => {
+      const target = state[k]; $('b-' + k).style.width = target + '%';
+      const el = $('v-' + k), from = shown[k];
+      if (!animate || reduce || from === target) { el.textContent = target + '/100'; shown[k] = target; return; }
+      const t0 = performance.now(), dur = 900;
+      (function step(n) { const u = Math.min(1, (n - t0) / dur); const v = Math.round(from + (target - from) * u); el.textContent = v + '/100'; if (u < 1) requestAnimationFrame(step); else shown[k] = target; })(t0);
+    });
+  }
+  function fadeSwap(fn, sound) {
+    const f = $('dgFade'); if (sound) Snd.whoosh(); f.classList.add('on');
+    setTimeout(() => { fn(); setTimeout(() => f.classList.remove('on'), 80); }, reduce ? 0 : 520);
+  }
+
+  /* typewriter */
+  let typeTimer = null, typing = false, skipFn = null;
+  function typeText(text, done) {
+    clearInterval(typeTimer); const b = $('dgBubble'); b.textContent = ''; typing = true; talking = true; Snd.reveal();
+    let i = 0;
+    const finish = () => { if (!typing) return; clearInterval(typeTimer); typing = false; talking = false; b.textContent = text; redraw(); done && done(); };
+    skipFn = finish;
+    if (reduce) { finish(); return; }
+    typeTimer = setInterval(() => { i++; b.textContent = text.slice(0, i); if (i % 3 === 0 && text[i - 1] !== ' ') Snd.tick(); if (i >= text.length) finish(); }, 22);
+  }
+  $('dgBubble').addEventListener('click', () => { if (typing && skipFn) skipFn(); });
+
+  /* ---------------- Flow ---------------- */
+  function scene() { return L.SCENES[state.currentScene]; }
+  function node() { return scene().dialogues[state.currentDialogue]; }
+
+  function renderNode() {
+    const sc = scene(), nd = node();
+    setBg(sc.bg); spriteName = sc.sprite; expr = 'neutral';
+    $('dgScene').textContent = sc.name; $('dgPlate').textContent = CHARS[sc.sprite].name.replace('\n', ' ');
+    $('dgPlate').style.whiteSpace = 'pre'; $('dgPlate').textContent = CHARS[sc.sprite].name;
+    $('dgChoices').innerHTML = ''; $('dgContRow').innerHTML = ''; answered = false; redraw();
+    typeText(nd.line, () => {
+      const wrap = $('dgChoices');
+      nd.choices.forEach((ch, i) => {
+        const b = document.createElement('button'); b.className = 'choice' + (ch.secret ? ' secret' : ''); b.type = 'button'; b.dataset.id = ch.id; b.textContent = (ch.emoji ? ch.emoji + ' ' : '') + ch.text;
+        b.style.animationDelay = (i * 90) + 'ms'; b.addEventListener('click', () => onChoose(ch.id)); wrap.appendChild(b);
+      });
+    });
+  }
+
+  function moodOf(delta) { const s = delta.trust + delta.diplomacy + delta.knowledge + delta.cooperation; return s >= 10 ? 'happy' : s >= 4 ? 'neutral' : 'concerned'; }
+
+  function onChoose(id) {
+    if (answered || state.gameFinished || state.choiceHistory.includes(id)) return;   // each response scored once
+    const ch = L.findChoice(id); if (!ch) return;
+    answered = true;
+    state = Object.assign({}, state, L.applyChoice(state, ch.delta), { choiceHistory: state.choiceHistory.concat(id) });
+    Snd.select(); renderHud(true);
+    if (ch.secret) hitAnimation();
+    document.querySelectorAll('#dgChoices .choice').forEach(b => { b.disabled = true; b.classList.add(b.dataset.id === id ? 'chosen' : 'dim'); });
+    expr = moodOf(ch.delta); redraw();
+    typeText(ch.reaction, () => {
+      const row = $('dgContRow'); row.innerHTML = '';
+      const rec = document.createElement('div'); rec.className = 'recorded'; rec.textContent = '✓ Decision Recorded';
+      const btn = document.createElement('button'); btn.className = 'btn cont'; btn.type = 'button'; btn.textContent = 'Continue ▶'; btn.addEventListener('click', onContinue, { once: true });
+      row.appendChild(rec); row.appendChild(btn);
+    });
+  }
+
+  function hitAnimation() {
+    const stage = $('dgStage'), stats = document.querySelectorAll('#dg .stat');
+    stage.classList.remove('shake'); stats.forEach(s => s.classList.remove('hit')); void stage.offsetWidth;
+    stage.classList.add('shake'); stats.forEach(s => s.classList.add('hit'));
+    const p = document.createElement('div'); p.className = 'pop'; p.textContent = '💥'; $('dgPlay').appendChild(p);
+    Snd.tone && Snd.tone(220, 0.35, 0.18, 'sawtooth', 0, 70);
+    setTimeout(() => { stage.classList.remove('shake'); stats.forEach(s => s.classList.remove('hit')); p.remove(); }, 900);
+  }
+
+  function onContinue() {
+    Snd.cont();
+    if (state.currentDialogue === 0) { state.currentDialogue = 1; fadeSwapSoft(renderNode); return; }
+    if (state.currentScene < L.SCENES.length - 1) {
+      $('dgTransText').textContent = scene().transition;
+      fadeSwap(() => { show('dgPlay', false); show('dgTrans', true); }, true);
+    } else { fadeSwap(showResults, true); }
+  }
+  function fadeSwapSoft(fn) { const p = $('dgPlay'); p.style.opacity = 0; p.style.transition = 'opacity .25s'; setTimeout(() => { fn(); p.style.opacity = 1; }, reduce ? 0 : 260); }
+
+  $('dgTransBtn').addEventListener('click', () => {
+    Snd.cont();
+    fadeSwap(() => {
+      state.currentScene++; state.currentDialogue = 0;
+      show('dgTrans', false); show('dgPlay', true); Snd.theme(scene().music); renderNode();
+    }, true);
+  });
+
+  function showResults() {
+    state.gameFinished = true;
+    const P = L.calculatePartnershipScore(state), e = L.determineEnding(state, P), E = L.ENDINGS[e];
+    const secret = e === 'diplomatic_disaster';
+    scoreSubmitted = false;
+    $('dgNickname').value = (() => { try { return localStorage.getItem('diplomat.nick') || ''; } catch (_) { return ''; } })();
+    $('dgSubmitStatus').textContent = '';
+    $('dgSubmitScore').disabled = false;
+    $('dgSubmitScore').textContent = 'SUBMIT SCORE';
+    show('dgPlay', false); setBg(secret ? 'disaster' : 'title'); $('dgScene').textContent = secret ? 'Secret Ending' : 'Summit Results';
+    const t = $('dgEndTitle'); t.textContent = E.title; t.className = 'end-title end-' + e; $('dgEndText').textContent = E.text;
+    $('dgRes').classList.toggle('disaster', secret); show('dgBadge', secret); show('dgReturn', secret);
+    show('dgEndText2', secret); if (secret) $('dgEndText2').textContent = E.text2;
+    const rain = $('dgRain'); rain.innerHTML = '';
+    if (secret && !reduce) ['🍕', '🥖', '📄', '🥐', '🍕', '🥖', '📄', '🥐', '🥖', '📄'].forEach((em, i) => { const s = document.createElement('span'); s.textContent = em; s.style.left = (4 + i * 10) + '%'; s.style.animationDuration = (7 + (i % 4) * 2) + 's'; s.style.animationDelay = (-i * 1.3) + 's'; rain.appendChild(s); });
+    const icons = { trust: '🤝', diplomacy: '💬', knowledge: '📖', cooperation: '👥' };
+    $('dgProfile').innerHTML = KEYS.map(k => `<div class="pcard"><div class="ic">${icons[k]}</div><div class="nm">${k[0].toUpperCase() + k.slice(1)}</div><div class="num">${state[k]}</div></div>`).join('') +
+      `<div class="pscore"><div class="nm">Partnership<br>Score</div><div class="num">${P}/100</div></div>`;
+    $('dgAgain').className = secret ? 'btn gold big' : 'btn gold';
+    show('dgRes', true); Snd.theme('summit');
+  }
+
+  function startGame() {
+    state = L.freshState(); currentRunId = makeRunId(); scoreSubmitted = false; KEYS.forEach(k => shown[k] = 50); renderHud(false); briefSeen = true; briefTok++;
+    ['dgTitle', 'dgBrief', 'dgRes', 'dgTrans'].forEach(i => show(i, false)); show('dgPlay', true);
+    Snd.theme(scene().music); renderNode();
+  }
+  function restart() {
+    state = L.freshState(); answered = false; clearInterval(typeTimer); typing = false; talking = false; briefTok++;
+    KEYS.forEach(k => shown[k] = 50); renderHud(false);
+    ['dgPlay', 'dgTrans', 'dgRes', 'dgBrief', 'dgHow', 'dgSet'].forEach(i => show(i, false));
+    $('dgRes').classList.remove('disaster'); show('dgBadge', false); show('dgReturn', false); show('dgEndText2', false); $('dgRain').innerHTML = '';
+    $('dgChoices').innerHTML = ''; $('dgContRow').innerHTML = '';
+    show('dgTitle', true); setBg('title'); $('dgScene').textContent = 'Introduction'; Snd.theme('title');
+  }
+
+  /* ---------------- Mission briefing (opening sequence, shown once) ---------------- */
+  let briefSeen = false, briefTok = 0, briefSkip = false, skipWake = [];
+  const BRIEF = {
+    p1: 'India and France share a longstanding relationship built on diplomacy, defence, science, culture and education.',
+    p2: 'You are a young Indian diplomat preparing for an important India–France summit.',
+    p3: 'Before the summit begins, you will meet three French representatives and discuss the future of this partnership.',
+    e1: 'Your responses will shape how the relationship develops.',
+    e2: 'Choose carefully. There are no obvious right answers — only consequences.'
+  };
+  const wait = ms => new Promise(res => { if (briefSkip || reduce) return res(); const t = setTimeout(res, ms); skipWake.push(() => { clearTimeout(t); res(); }); });
+  function reveal(el) { el.classList.add('in'); }
+  function typeInto(el, text, tok) {
+    return new Promise(res => {
+      let i = 0;
+      const paint = n => { el.innerHTML = ''; const a = document.createElement('span'); a.textContent = text.slice(0, n); const b = document.createElement('span'); b.className = 'off'; b.textContent = text.slice(n); el.append(a, b); };
+      paint(0); Snd.reveal();
+      if (briefSkip || reduce) { paint(text.length); return res(); }
+      const iv = setInterval(() => {
+        if (tok !== briefTok || briefSkip) { clearInterval(iv); paint(text.length); return res(); }
+        i++; paint(i); if (i % 4 === 0) Snd.tick(); if (i >= text.length) { clearInterval(iv); res(); }
+      }, 26);
+      skipWake.push(() => { clearInterval(iv); paint(text.length); res(); });
+    });
+  }
+  function resetBrief() {
+    briefSkip = false; skipWake = [];
+    document.querySelectorAll('#dgBrief .pre').forEach(e => e.classList.remove('in'));
+    ['bP1', 'bP2', 'bP3', 'bE1', 'bE2'].forEach(id => $(id).innerHTML = `<span class="off">${BRIEF[id.replace('bP', 'p').replace('bE', 'e')]}</span>`);
+    document.querySelectorAll('#dgBrief .b-card canvas').forEach(cv => drawSprite(cv, cv.parentNode.dataset.char, 'happy', false, false));
+    $('dgBriefSkip').classList.remove('hidden');
+  }
+  async function runBrief() {
+    const tok = ++briefTok; resetBrief();
+    const ok = () => tok === briefTok;
+    await wait(250); if (!ok()) return; reveal($('bFlags'));
+    await wait(1000); if (!ok()) return; reveal($('bHead')); Snd.reveal();
+    await wait(1100); if (!ok()) return;
+    await typeInto($('bP1'), BRIEF.p1, tok); await wait(500); if (!ok()) return;
+    await typeInto($('bP2'), BRIEF.p2, tok); await wait(500); if (!ok()) return;
+    await typeInto($('bP3'), BRIEF.p3, tok); await wait(600); if (!ok()) return;
+    for (const c of document.querySelectorAll('#dgBrief .b-card')) { reveal(c); Snd.select(); await wait(1000); if (!ok()) return; }
+    await wait(300); if (!ok()) return;
+    await typeInto($('bE1'), BRIEF.e1, tok); await wait(450); if (!ok()) return;
+    await typeInto($('bE2'), BRIEF.e2, tok); await wait(500); if (!ok()) return;
+    document.querySelectorAll('#dgBrief .pre').forEach(reveal); $('dgBriefSkip').classList.add('hidden');
+    $('dgBrief').scrollTo && $('dgBrief').scrollTo({ top: 9999, behavior: 'smooth' });
+  }
+  $('dgBriefSkip').addEventListener('click', () => { briefSkip = true; skipWake.splice(0).forEach(f => f()); });
+  $('dgStartMission').addEventListener('click', () => { Snd.cont(); fadeSwap(startGame, true); });
+
+  function beginMission() {
+    if (briefSeen) { fadeSwap(startGame, true); return; }          // briefing plays once, before the first game
+    fadeSwap(() => { show('dgTitle', false); show('dgBrief', true); runBrief(); }, true);
+  }
+
+  /* ---------------- Controls ---------------- */
+  $('dgReturn').addEventListener('click', () => {
+    const url = $('dg').dataset.returnUrl;
+    const ev = new CustomEvent('diplomat:return', { bubbles: true, cancelable: true });
+    if ($('dg').dispatchEvent(ev) && url) { window.location.href = url; return; }
+    fadeSwap(restart, false); window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+  $('dgBegin').addEventListener('click', () => { Snd.ensure(); Snd.cont(); beginMission(); });
+  $('dgHowBtn').addEventListener('click', () => { Snd.ensure(); Snd.theme('title'); show('dgHow', true); });
+  $('dgHowClose').addEventListener('click', () => show('dgHow', false));
+  $('dgSetBtn').addEventListener('click', () => { Snd.ensure(); Snd.theme('title'); show('dgSet', true); });
+  $('dgSetClose').addEventListener('click', () => show('dgSet', false));
+  $('dgAgain').addEventListener('click', () => fadeSwap(restart, true));
+  $('dgRestartTop').addEventListener('click', () => fadeSwap(restart, true));
+
+  $('dgTitleLB').addEventListener('click', () => openLeaderboard('dgTitle'));
+  $('dgResultsLB').addEventListener('click', () => openLeaderboard('dgRes'));
+  $('dgLBClose').addEventListener('click', closeLeaderboard);
+  $('dgLBRank').addEventListener('click', checkMyRank);
+  $('dgSubmitScore').addEventListener('click', submitDiplomatScore);
+  $('dgNickname').addEventListener('keydown', event => {
+    if (event.key === 'Enter') submitDiplomatScore();
+  });
+
+  function audioUI() {
+    $('dgMusicBtn').classList.toggle('off', !Snd.S.music); $('dgMuteBtn').classList.toggle('off', Snd.S.muted);
+    $('dgMuteBtn').textContent = Snd.S.muted || Snd.S.vol === 0 ? '🔇' : '🔊';
+    $('dgMusic2').textContent = 'Music: ' + (Snd.S.music ? 'On' : 'Off'); $('dgSfx2').textContent = 'Effects: ' + (Snd.S.sfx ? 'On' : 'Off');
+    $('dgVol').value = $('dgVol2').value = Math.round(Snd.S.vol * 100); Snd.apply();
+  }
+  const toggleMusic = () => { Snd.ensure(); Snd.S.music = !Snd.S.music; audioUI(); };
+  $('dgMusicBtn').addEventListener('click', toggleMusic); $('dgMusic2').addEventListener('click', toggleMusic);
+  $('dgMuteBtn').addEventListener('click', () => { Snd.ensure(); Snd.S.muted = !Snd.S.muted; audioUI(); });
+  $('dgSfx2').addEventListener('click', () => { Snd.S.sfx = !Snd.S.sfx; audioUI(); });
+  [$('dgVol'), $('dgVol2')].forEach(r => r.addEventListener('input', e => { Snd.ensure(); Snd.S.vol = e.target.value / 100; if (Snd.S.vol > 0) Snd.S.muted = false; audioUI(); }));
+
+  /* init */
+  setBg('title'); renderHud(false); redraw(); audioUI();
+  window.addEventListener('pointerdown', function first() { Snd.ensure(); Snd.theme('title'); window.removeEventListener('pointerdown', first); }, { once: true });
+})();
+</script>
+</body>
+</html>
