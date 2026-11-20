@@ -491,6 +491,7 @@ const DiplomatLogic = (function () {
 (function () {
   const L = DiplomatLogic;
   const $ = id => document.getElementById(id);
+  let currentLang = 'en';
   const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* ---------------- Pixel backgrounds (procedural, 192x108) ---------------- */
@@ -1032,39 +1033,102 @@ const DiplomatLogic = (function () {
   function scene() { return L.SCENES[state.currentScene]; }
   function node() { return scene().dialogues[state.currentDialogue]; }
 
-  function renderNode() {
-    const sc = scene(), nd = node();
-    setBg(sc.bg); spriteName = sc.sprite; expr = 'neutral';
-    $('dgScene').textContent = sc.name; $('dgPlate').textContent = CHARS[sc.sprite].name.replace('\n', ' ');
-    $('dgPlate').style.whiteSpace = 'pre'; $('dgPlate').textContent = CHARS[sc.sprite].name;
-    $('dgChoices').innerHTML = ''; $('dgContRow').innerHTML = ''; answered = false; redraw();
-    typeText(nd.line, () => {
-      const wrap = $('dgChoices');
-      nd.choices.forEach((ch, i) => {
-        const b = document.createElement('button'); b.className = 'choice' + (ch.secret ? ' secret' : ''); b.type = 'button'; b.dataset.id = ch.id; b.textContent = (ch.emoji ? ch.emoji + ' ' : '') + ch.text;
-        b.style.animationDelay = (i * 90) + 'ms'; b.addEventListener('click', () => onChoose(ch.id)); wrap.appendChild(b);
-      });
+
+function renderNode() {
+  const sc = scene(), nd = node();
+  const translatedScene = DiplomatI18N.getScene(currentLang, sc.id);
+  const translatedDialogue = DiplomatI18N.getDialogue(
+    currentLang, sc.id, state.currentDialogue
+  );
+
+  setBg(sc.bg);
+  spriteName = sc.sprite;
+  expr = 'neutral';
+
+  $('dgScene').textContent = translatedScene ? translatedScene.name : sc.name;
+  $('dgPlate').textContent = CHARS[sc.sprite].name;
+  $('dgPlate').style.whiteSpace = 'pre';
+
+  $('dgChoices').innerHTML = '';
+  $('dgContRow').innerHTML = '';
+  answered = false;
+  redraw();
+
+  typeText(translatedDialogue ? translatedDialogue.line : nd.line, () => {
+    const wrap = $('dgChoices');
+
+    nd.choices.forEach((ch, i) => {
+      const translatedChoice = DiplomatI18N.getChoice(
+        currentLang, sc.id, state.currentDialogue, ch.id
+      );
+
+      const b = document.createElement('button');
+      b.className = 'choice' + (ch.secret ? ' secret' : '');
+      b.type = 'button';
+      b.dataset.id = ch.id;
+      b.textContent = (ch.emoji ? ch.emoji + ' ' : '') +
+        (translatedChoice ? translatedChoice[0] : ch.text);
+
+      b.style.animationDelay = (i * 90) + 'ms';
+      b.addEventListener('click', () => onChoose(ch.id));
+      wrap.appendChild(b);
     });
-  }
+  });
+}
+
 
   function moodOf(delta) { const s = delta.trust + delta.diplomacy + delta.knowledge + delta.cooperation; return s >= 10 ? 'happy' : s >= 4 ? 'neutral' : 'concerned'; }
 
-  function onChoose(id) {
-    if (answered || state.gameFinished || state.choiceHistory.includes(id)) return;   // each response scored once
-    const ch = L.findChoice(id); if (!ch) return;
-    answered = true;
-    state = Object.assign({}, state, L.applyChoice(state, ch.delta), { choiceHistory: state.choiceHistory.concat(id) });
-    Snd.select(); renderHud(true);
-    if (ch.secret) hitAnimation();
-    document.querySelectorAll('#dgChoices .choice').forEach(b => { b.disabled = true; b.classList.add(b.dataset.id === id ? 'chosen' : 'dim'); });
-    expr = moodOf(ch.delta); redraw();
-    typeText(ch.reaction, () => {
-      const row = $('dgContRow'); row.innerHTML = '';
-      const rec = document.createElement('div'); rec.className = 'recorded'; rec.textContent = '✓ Decision Recorded';
-      const btn = document.createElement('button'); btn.className = 'btn cont'; btn.type = 'button'; btn.textContent = 'Continue ▶'; btn.addEventListener('click', onContinue, { once: true });
-      row.appendChild(rec); row.appendChild(btn);
-    });
-  }
+function onChoose(id) {
+  if (answered || state.gameFinished || state.choiceHistory.includes(id)) return;   // each response scored once
+  const ch = L.findChoice(id); if (!ch) return;
+
+  answered = true;
+  state = Object.assign(
+    {},
+    state,
+    L.applyChoice(state, ch.delta),
+    { choiceHistory: state.choiceHistory.concat(id) }
+  );
+
+  Snd.select();
+  renderHud(true);
+
+  if (ch.secret) hitAnimation();
+
+  document.querySelectorAll('#dgChoices .choice').forEach(b => {
+    b.disabled = true;
+    b.classList.add(b.dataset.id === id ? 'chosen' : 'dim');
+  });
+
+  expr = moodOf(ch.delta);
+  redraw();
+
+  const translatedChoice = DiplomatI18N.getChoice(
+    currentLang,
+    scene().id,
+    state.currentDialogue,
+    id
+  );
+
+  typeText(translatedChoice ? translatedChoice[1] : ch.reaction, () => {
+    const row = $('dgContRow');
+    row.innerHTML = '';
+
+    const rec = document.createElement('div');
+    rec.className = 'recorded';
+    rec.textContent = DiplomatI18N.get(currentLang, 'recorded');
+
+    const btn = document.createElement('button');
+    btn.className = 'btn cont';
+    btn.type = 'button';
+    btn.textContent = DiplomatI18N.get(currentLang, 'continue');
+    btn.addEventListener('click', onContinue, { once: true });
+
+    row.appendChild(rec);
+    row.appendChild(btn);
+  });
+}
 
   function hitAnimation() {
     const stage = $('dgStage'), stats = document.querySelectorAll('#dg .stat');
@@ -1219,7 +1283,25 @@ const DiplomatLogic = (function () {
   $('dgMuteBtn').addEventListener('click', () => { Snd.ensure(); Snd.S.muted = !Snd.S.muted; audioUI(); });
   $('dgSfx2').addEventListener('click', () => { Snd.S.sfx = !Snd.S.sfx; audioUI(); });
   [$('dgVol'), $('dgVol2')].forEach(r => r.addEventListener('input', e => { Snd.ensure(); Snd.S.vol = e.target.value / 100; if (Snd.S.vol > 0) Snd.S.muted = false; audioUI(); }));
+  function setLanguage(lang) {
+  currentLang = lang;
 
+  $('langEN').classList.toggle('active', lang === 'en');
+  $('langFR').classList.toggle('active', lang === 'fr');
+
+  if (state.gameFinished) {
+    showResults();
+    return;
+  }
+
+  if (document.getElementById('dgPlay') &&
+      document.getElementById('dgPlay').style.display !== 'none') {
+    renderNode();
+  }
+}
+
+$('langEN').addEventListener('click', () => setLanguage('en'));
+$('langFR').addEventListener('click', () => setLanguage('fr'));
   /* init */
   setBg('title'); renderHud(false); redraw(); audioUI();
   window.addEventListener('pointerdown', function first() { Snd.ensure(); Snd.theme('title'); window.removeEventListener('pointerdown', first); }, { once: true });
