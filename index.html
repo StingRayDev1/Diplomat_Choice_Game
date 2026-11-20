@@ -175,6 +175,32 @@ html,body{margin:0;background:#0b1026;color:#e8ecf8;font-family:'Nunito',system-
   #dg input[type=range]{width:64px}
 }
 @media (prefers-reduced-motion:reduce){#dg *{animation:none!important;transition:none!important}}
+  /* Language toggle */
+#dg .language-switch {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+  font-size: 13px;
+  color: #aaa;
+}
+
+#dg .lang-btn {
+  background: transparent;
+  border: none;
+  color: #aaa;
+  font: inherit;
+  cursor: pointer;
+  padding: 5px 8px;
+}
+
+#dg .lang-btn.active {
+  color: #fff;
+  font-weight: bold;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
 </style>
 </head>
 <body>
@@ -233,7 +259,12 @@ html,body{margin:0;background:#0b1026;color:#e8ecf8;font-family:'Nunito',system-
       <p class="b-p b-end" id="bE1"></p>
       <p class="b-p b-end" id="bE2"></p>
       <button class="btn primary b-start pre" id="dgStartMission" type="button">▶ START MISSION</button>
-    </div>
+      <div class="language-switch">
+        <button type="button" id="langEN" class="lang-btn active">EN</button>
+        <span>|</span>
+        <button type="button" id="langFR" class="lang-btn">FR</button>
+      </div>
+      </div>
 
     <!-- Play -->
     <div class="play hidden" id="dgPlay">
